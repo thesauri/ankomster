@@ -1,6 +1,6 @@
 import express from "express"
-import fs from "fs/promises"
 import morgan from "morgan"
+import fetchFlightData from "./fetchFlightData.js"
 
 const PORT = 8080
 
@@ -9,10 +9,9 @@ const app = express()
 app.use(morgan("short"))
 
 app.get("/ARN", async (request, response) => {
-    const arrivals = JSON.parse(await fs.readFile("./arrivals-ARN-2020-12-28.json", "utf8"))
-    const departures = JSON.parse(await fs.readFile("./departures-ARN-2020-12-28.json", "utf8"))
+    const flightData = await fetchFlightData("ARN")
     response.set("Access-Control-Allow-Origin", "*")
-    response.json({ arrivals, departures })
+    response.json(flightData)
 })
 
 app.listen(PORT, () => {
