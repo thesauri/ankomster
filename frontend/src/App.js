@@ -1,13 +1,13 @@
 import Flights from "./Flights.js"
 import "./App.css"
 import { Link } from "react-router-dom"
-import arrivalFlightData from "./arrivals-ARN-2020-12-28"
-import departureFlightData from "./departures-ARN-2020-12-28"
+import useFlightData from "./useFlightData.js"
 
 const App = ({ mode = "arrivals" }) => {
   const arrivalsClasses = ["header", mode !== "arrivals" && "inactive"].filter(x => x).join(" ")
   const departuresClasses = ["header", mode !== "departures" && "inactive"].filter(x => x).join(" ")
-  const flightData = mode === "arrivals" ? arrivalFlightData : departureFlightData
+  const flightData = useFlightData()
+
   return (
     <div>
       <header>

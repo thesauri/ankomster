@@ -1,5 +1,9 @@
 const Flights = ({ mode, flightData }) => {
-  const flights = flightData.flights
+  if (!flightData) {
+    return (<LoadingFlights />)
+  }
+
+  const flights = flightData[mode].flights
     .filter(flight => flight.locationAndStatus.flightLegStatus !== "DEL")
     .sort((flightA, flightB) => new Date(scheduledUtcOf(flightA)) - new Date(scheduledUtcOf(flightB)))
   const flightRows = flights.map(flight => {
@@ -19,23 +23,41 @@ const Flights = ({ mode, flightData }) => {
   })
   return (
     <table>
-    <thead>
-        <tr>
-        <th>Tid</th>
-        <th>{mode === "arrivals" ? "Från" : "Till"}</th>
-        <th>Flygnr</th>
-        <th>Anmärkning</th>
-        </tr>
-    </thead>
-    <tbody>
-        {flightRows}
-    </tbody>
+      <FlightHeader mode={mode} />
+      <tbody>
+          {flightRows}
+      </tbody>
     </table>
   );
 }
 
 const scheduledUtcOf = (flight) => flight.arrivalTime ? flight.arrivalTime.scheduledUtc : flight.departureTime.scheduledUtc
 const destinationOf = (flight) => flight.departureAirportSwedish || flight.arrivalAirportSwedish
+
+const LoadingFlights = ({ mode }) => (
+  <table>
+    <FlightHeader mode={mode} />
+    <tbody>
+        <tr>
+          <td>Hämtar flyg...</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+    </tbody>
+  </table>
+)
+
+const FlightHeader = ({ mode }) => ( 
+  <thead>
+      <tr>
+        <th>Tid</th>
+        <th>{mode === "arrivals" ? "Från" : "Till"}</th>
+        <th>Flygnr</th>
+        <th>Anmärkning</th>
+      </tr>
+  </thead>
+)
 
 const FlightRow = ({time, from, flightId, remarks}) => {
   const formattedTime = `${time.getHours().toString().padStart(2, "0")}:${time.getMinutes().toString().padStart(2, "0")}`
