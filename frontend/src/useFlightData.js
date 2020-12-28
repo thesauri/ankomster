@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react"
 
-const useFlightData = () => {
+const useFlightData = (airportIATA) => {
     const [flightData, setFlightData] = useState(null)
 
     useEffect(() => {
         const fetchFlightData = async () => {
-            const flightData = await (await fetch("http://localhost:8080/ARN")).json()
+            const flightData = await (await fetch(`http://localhost:8080/${airportIATA}`)).json()
             setFlightData(flightData)
         }
         fetchFlightData()
-    }, [])
+    }, [airportIATA])
 
     return flightData;
 }

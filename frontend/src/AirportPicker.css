@@ -1,0 +1,15 @@
+.airport-picker {
+    margin: 0 16px;
+}
+
+.airport-picker > h1 {
+    color: var(--white);
+}
+
+.airport-picker > h1 > span {
+    color: var(--yellow);
+}
+
+.airport-picker > a {
+    color: var(--yellow);
+}

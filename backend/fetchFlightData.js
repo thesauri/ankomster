@@ -6,41 +6,45 @@ import { Semaphore } from "await-semaphore"
 const API_KEY = process.env.API_KEY
 assert(API_KEY, "Missing Swedavia API key as API_KEY environment variable")
 
-let flightDataCache = null
-let flightDataLastUpdated = null
+let flightDataCache = {}
 const CACHE_REFRESH_INTERVAL = 60 * 1000
 const cacheUpdateSemaphore = new Semaphore(1)
 
 const fetchFlightData = async (airportIATA) => {
-    if (flightDataCache &&
-        Date.now() - flightDataLastUpdated.getTime() < CACHE_REFRESH_INTERVAL) {
+    let cachedFlightData = flightDataCache[airportIATA]
+    if (cachedFlightData &&
+        Date.now() - cachedFlightData.lastUpdate < CACHE_REFRESH_INTERVAL) {
         console.log("Using cache")
-        return flightDataCache
+        return cachedFlightData.flights
     }
 
     const release = await cacheUpdateSemaphore.acquire()
+    cachedFlightData = flightDataCache[airportIATA]
 
-    if (flightDataCache &&
-        Date.now() - flightDataLastUpdated.getTime() < CACHE_REFRESH_INTERVAL) {
+    if (cachedFlightData &&
+        Date.now() - cachedFlightData.lastUpdate < CACHE_REFRESH_INTERVAL) {
         // Flight data was already fetched by someone else while we waited for the lock, just return the cached data
         console.log("Flight data already fetched, using cache")
         release()
-        return flightDataCache
+        return flightDataCache.flights
     }
 
     console.log("Fetching fresh data from Swedavia")
     const arrivals = fetch(airportIATA, "arrivals")
     const departures = fetch(airportIATA, "departures")
     const arrivalsAndDepartures = await Promise.all([arrivals, departures])
-    flightDataCache = {
+    const flights = {
         arrivals: arrivalsAndDepartures[0],
         departures: arrivalsAndDepartures[1]
     }
-    flightDataLastUpdated = new Date()
+    flightDataCache[airportIATA] = {
+        flights,
+        lastUpdate: new Date()
+    }
 
     release()
 
-    return flightDataCache
+    return flights
 }
 
 const fetch = (airportIATA, mode) => {

@@ -2,6 +2,7 @@
   display: inline-block;
   color: var(--yellow);
   margin: 0 16px 16px 16px;
+  text-decoration: underline;
 }
 
 .inactive {

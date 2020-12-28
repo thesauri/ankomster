@@ -4,19 +4,20 @@ import "./index.css"
 import App from "./App"
 import reportWebVitals from "./reportWebVitals"
 import { BrowserRouter, Switch, Route } from "react-router-dom"
+import AirportPicker from "./AirportPicker"
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Switch>
-        <Route path="/arrivals">
+        <Route path="/:airportIATA/arrivals">
           <App mode="arrivals" />
         </Route>
-        <Route path="/departures">
+        <Route path="/:airportIATA/departures">
           <App mode="departures" />
         </Route>
         <Route path="/">
-          <App />
+          <AirportPicker />
         </Route>
       </Switch>
     </BrowserRouter>

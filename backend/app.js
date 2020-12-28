@@ -8,8 +8,13 @@ const app = express()
 
 app.use(morgan("short"))
 
-app.get("/ARN", async (request, response) => {
-    const flightData = await fetchFlightData("ARN")
+app.get("/:airportIATA", async (request, response) => {
+    const { airportIATA } = request.params
+    if (!["ARN", "GOT", "BRA", "MMX", "LLA", "UME", "OSD", "VBY", "RNB", "KRN"].includes(airportIATA)) {
+        response.status(404).send(`Invalid airport IATA: ${airportIATA}`)
+        return
+    }
+    const flightData = await fetchFlightData(airportIATA)
     response.set("Access-Control-Allow-Origin", "*")
     response.json(flightData)
 })
