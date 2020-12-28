@@ -1,6 +1,30 @@
-import styles from "./App.css";
+import flightsUME20201228 from "./flights-UME-2020-12-28";
+
+const FlightRow = ({time, from, flightId, remarks}) => {
+  const formattedTime = `${time.getHours().toString().padStart(2, "0")}:${time.getMinutes().toString().padStart(2, "0")}`
+  return (
+    <tr>
+      <td>{formattedTime}</td>
+      <td>{from}</td>
+      <td>{flightId}</td>
+      <td>{remarks}</td>
+    </tr>
+  )
+}
 
 function App() {
+  const flights = flightsUME20201228.flights
+    .filter(flight => flight.locationAndStatus.flightLegStatus !== "DEL")
+    .sort((flightA, flightB) => new Date(flightA.arrivalTime.scheduledUtc) - new Date(flightB.arrivalTime.scheduledUtc))
+  const flightRows = flights.map(flight => {
+    const time = new Date(flight.arrivalTime.scheduledUtc)
+    const from = flight.departureAirportSwedish
+    const flightId = flight.flightId
+    const remarks = flight.remarksSwedish.length > 0 ? flight.remarksSwedish[flight.remarksSwedish.length - 1].text : ""
+    return (
+      <FlightRow key={flightId} time={time} from={from} flightId={flightId} remarks={remarks} />
+    )
+  })
   return (
     <div>
       <header>
@@ -16,24 +40,7 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>14:20</td>
-            <td>Stockholm ARN</td>
-            <td>SK34</td>
-            <td>Landat</td>
-          </tr>
-          <tr>
-            <td>17:25</td>
-            <td>Stockholm ARN</td>
-            <td>SK2030</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>20:30</td>
-            <td>Stockholm BRA</td>
-            <td>TF120</td>
-            <td>Inställd</td>
-          </tr>
+          {flightRows}
         </tbody>
       </table>
     </div>
