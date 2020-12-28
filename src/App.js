@@ -1,48 +1,28 @@
-import flightsUME20201228 from "./flights-UME-2020-12-28";
+import Flights from "./Flights.js"
+import "./App.css"
+import { Link } from "react-router-dom"
+import arrivalFlightData from "./arrivals-ARN-2020-12-28"
+import departureFlightData from "./departures-ARN-2020-12-28"
 
-const FlightRow = ({time, from, flightId, remarks}) => {
-  const formattedTime = `${time.getHours().toString().padStart(2, "0")}:${time.getMinutes().toString().padStart(2, "0")}`
-  return (
-    <tr>
-      <td>{formattedTime}</td>
-      <td>{from}</td>
-      <td>{flightId}</td>
-      <td>{remarks}</td>
-    </tr>
-  )
-}
-
-function App() {
-  const flights = flightsUME20201228.flights
-    .filter(flight => flight.locationAndStatus.flightLegStatus !== "DEL")
-    .sort((flightA, flightB) => new Date(flightA.arrivalTime.scheduledUtc) - new Date(flightB.arrivalTime.scheduledUtc))
-  const flightRows = flights.map(flight => {
-    const time = new Date(flight.arrivalTime.scheduledUtc)
-    const from = flight.departureAirportSwedish
-    const flightId = flight.flightId
-    const remarks = flight.remarksSwedish.length > 0 ? flight.remarksSwedish[flight.remarksSwedish.length - 1].text : ""
-    return (
-      <FlightRow key={flightId} time={time} from={from} flightId={flightId} remarks={remarks} />
-    )
-  })
+const App = ({ mode = "arrivals" }) => {
+  const arrivalsClasses = ["header", mode !== "arrivals" && "inactive"].filter(x => x).join(" ")
+  const departuresClasses = ["header", mode !== "departures" && "inactive"].filter(x => x).join(" ")
+  const flightData = mode === "arrivals" ? arrivalFlightData : departureFlightData
   return (
     <div>
       <header>
-        <h1>Ankomster</h1>
+        <Link to="/arrivals">
+          <h1 className={arrivalsClasses}>
+            Ankomster
+          </h1>
+        </Link>
+        <Link to="/departures">
+          <h1 className={departuresClasses}>
+            Avgångar
+          </h1>
+        </Link>
       </header>
-      <table>
-        <thead>
-          <tr>
-            <th>Tid</th>
-            <th>Från</th>
-            <th>Flygnr</th>
-            <th>Anmärkning</th>
-          </tr>
-        </thead>
-        <tbody>
-          {flightRows}
-        </tbody>
-      </table>
+      <Flights mode={mode} flightData={flightData} />
     </div>
   );
 }

@@ -1,0 +1,9 @@
+.header {
+  display: inline-block;
+  color: var(--yellow);
+  margin: 0 16px 16px 16px;
+}
+
+.inactive {
+  opacity: 0.3;
+}
