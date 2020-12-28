@@ -4,6 +4,7 @@
 
 .airport-picker > h1 {
     color: var(--white);
+    margin: 16px 0;
 }
 
 .airport-picker > h1 > span {
@@ -12,4 +13,8 @@
 
 .airport-picker > a {
     color: var(--yellow);
+}
+
+.airport-picker > a > h2 {
+    margin: 0 0 16px 0;
 }
