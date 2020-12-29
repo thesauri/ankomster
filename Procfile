@@ -1,1 +1,1 @@
-web: cd backend/ && yarn && yarn heroku-postbuild && yarn start
+web: cd backend/ && yarn start
