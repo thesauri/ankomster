@@ -10,7 +10,7 @@ const AirportPicker = () => (
     <Link to="/GOT/arrivals">
       <h2>Göteborg Landvetter</h2>
     </Link>
-    <Link to="/BRA/arrivals">
+    <Link to="/BMA/arrivals">
       <h2>Stockholm Bromma</h2>
     </Link>
     <Link to="/MMX/arrivals">

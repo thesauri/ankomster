@@ -10,7 +10,7 @@ app.use(morgan("short"))
 
 app.get("/:airportIATA", async (request, response) => {
     const { airportIATA } = request.params
-    if (!["ARN", "GOT", "BRA", "MMX", "LLA", "UME", "OSD", "VBY", "RNB", "KRN"].includes(airportIATA)) {
+    if (!["ARN", "GOT", "BMA", "MMX", "LLA", "UME", "OSD", "VBY", "RNB", "KRN"].includes(airportIATA)) {
         response.status(404).send(`Invalid airport IATA: ${airportIATA}`)
         return
     }
