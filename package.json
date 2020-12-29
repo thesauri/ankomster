@@ -7,7 +7,7 @@
       "yarn": "1.22.10"
     },
     "scripts": {
-        "build": "cd frontend/ && yarn && yarn build && cp -r build/ ../backend/public && cd ../backend/ && yarn",
+        "build": "cd frontend/ && yarn && yarn build && cp -r build/ ../backend/ && cd ../backend/ && rm -r public/ && mv build/ public/ && yarn",
         "start": "cd backend/ && yarn start"
     }
   }
