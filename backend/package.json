@@ -10,7 +10,8 @@
     "morgan": "^1.10.0"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "heroku-postbuild": "cd ../frontend/ && yarn && yarn build && cp -r build/ ../backend/public"
   },
   "type": "module"
 }

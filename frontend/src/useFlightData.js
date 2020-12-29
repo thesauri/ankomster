@@ -5,7 +5,7 @@ const useFlightData = (airportIATA) => {
 
     useEffect(() => {
         const fetchFlightData = async () => {
-            const flightData = await (await fetch(`http://localhost:8080/${airportIATA}`)).json()
+            const flightData = await (await fetch(`/api/${airportIATA}`)).json()
             setFlightData(flightData)
         }
         fetchFlightData()
