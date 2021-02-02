@@ -1,6 +1,7 @@
-const Flights = ({ mode, flightData }) => {
+const Flights = ({ mode, flightData, fetchError }) => {
   if (!flightData) {
-    return (<LoadingFlights />)
+    const message = fetchError || "Hämtar flyg..."
+    return (<DummyFlights message={message} />)
   }
 
   const flights = flightData[mode].flights
@@ -34,12 +35,12 @@ const Flights = ({ mode, flightData }) => {
 const scheduledUtcOf = (flight) => flight.arrivalTime ? flight.arrivalTime.scheduledUtc : flight.departureTime.scheduledUtc
 const destinationOf = (flight) => flight.departureAirportSwedish || flight.arrivalAirportSwedish
 
-const LoadingFlights = ({ mode }) => (
+const DummyFlights = ({ mode, message }) => (
   <table>
     <FlightHeader mode={mode} />
     <tbody>
         <tr>
-          <td>Hämtar flyg...</td>
+          <td>{message}</td>
           <td></td>
           <td></td>
           <td></td>

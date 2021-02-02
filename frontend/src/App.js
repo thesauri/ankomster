@@ -7,7 +7,7 @@ const App = ({ mode = "arrivals" }) => {
   const arrivalsClasses = ["header", mode !== "arrivals" && "inactive"].filter(x => x).join(" ")
   const departuresClasses = ["header", mode !== "departures" && "inactive"].filter(x => x).join(" ")
   const { airportIATA } = useParams()
-  const flightData = useFlightData(airportIATA)
+  const [flightData, fetchError] = useFlightData(airportIATA)
 
   return (
     <div>
@@ -23,7 +23,7 @@ const App = ({ mode = "arrivals" }) => {
           </h1>
         </Link>
       </header>
-      <Flights mode={mode} flightData={flightData} />
+      <Flights mode={mode} flightData={flightData} fetchError={fetchError} />
     </div>
   );
 }
