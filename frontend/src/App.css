@@ -1,7 +1,13 @@
-.header {
+.airport {
+    display: inline-block;
+    margin: 0 16px 16px 16px;
+    color: var(--white);
+}
+
+.nav-item, .change-airport {
   display: inline-block;
   color: var(--yellow);
-  margin: 0 16px 16px 16px;
+  margin: 0 8px 16px 8px;
   text-decoration: underline;
 }
 
