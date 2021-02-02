@@ -4,23 +4,38 @@ const Flights = ({ mode, flightData, fetchError }) => {
     return (<DummyFlights message={message} />)
   }
 
-  const flights = flightData[mode].flights
-    .filter(flight => flight.locationAndStatus.flightLegStatus !== "DEL")
-    .sort((flightA, flightB) => new Date(scheduledUtcOf(flightA)) - new Date(scheduledUtcOf(flightB)))
-  const flightRows = flights.map(flight => {
-    const time = new Date(scheduledUtcOf(flight))
-    const from = destinationOf(flight)
-    const flightId = flight.flightId
-    const remarks = flight.remarksSwedish.length > 0 ? flight.remarksSwedish[flight.remarksSwedish.length - 1].text : ""
-    return (
-      <FlightRow
-        key={`${mode}-${time.toISOString()}-${flightId}`}
-        time={time}
-        from={from}
-        flightId={flightId}
-        remarks={remarks}
-      />
-    )
+  const flights = flightData[mode]
+    .map(flightsOnDate => ({
+      date: flightsOnDate[mode === "arrivals" ? "to" : "from"][mode === "arrivals" ? "flightArrivalDate" : "flightDepartureDate"],
+      flights: flightsOnDate.flights
+        .filter(flight => flight.locationAndStatus.flightLegStatus !== "DEL")
+        .sort((flightA, flightB) => new Date(scheduledUtcOf(flightA)) - new Date(scheduledUtcOf(flightB)))
+    }))
+
+  const flightRows = flights.flatMap((flightsOnDate, dateIndex) => {
+    const flightRowsOnDate = flightsOnDate.flights.map(flight => {
+      const time = new Date(scheduledUtcOf(flight))
+      const from = destinationOf(flight)
+      const flightId = flight.flightId
+      const remarks = flight.remarksSwedish.length > 0 ? flight.remarksSwedish[flight.remarksSwedish.length - 1].text : ""
+      return (
+        <FlightRow
+          key={`${mode}-${time.toISOString()}-${flightId}`}
+          time={time}
+          from={from}
+          flightId={flightId}
+          remarks={remarks}
+        />
+      )
+    })
+    if (dateIndex !== 0) {
+      const dateRow = (
+        <DateRow key={flightsOnDate.date} date={flightsOnDate.date} />
+      )
+      return [dateRow, ...flightRowsOnDate]
+    } else {
+      return flightRowsOnDate
+    }
   })
   return (
     <table>
@@ -68,6 +83,17 @@ const FlightRow = ({time, from, flightId, remarks}) => {
       <td>{from}</td>
       <td>{flightId}</td>
       <td>{remarks}</td>
+    </tr>
+  )
+}
+
+const DateRow = ({ date }) => {
+  return (
+    <tr>
+      <td>{date}</td>
+      <td></td>
+      <td></td>
+      <td></td>
     </tr>
   )
 }

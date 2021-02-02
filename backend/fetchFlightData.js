@@ -14,7 +14,6 @@ const fetchFlightData = async (airportIATA) => {
     let cachedFlightData = flightDataCache[airportIATA]
     if (cachedFlightData &&
         Date.now() - cachedFlightData.lastUpdate < CACHE_REFRESH_INTERVAL) {
-        console.log("Using cache")
         return cachedFlightData.flights
     }
 
@@ -30,12 +29,19 @@ const fetchFlightData = async (airportIATA) => {
     }
 
     console.log("Fetching fresh data from Swedavia")
-    const arrivals = fetch(airportIATA, "arrivals")
-    const departures = fetch(airportIATA, "departures")
-    const arrivalsAndDepartures = await Promise.all([arrivals, departures])
+    const arrivalsToday = fetch(airportIATA, "arrivals", dateTodayYYYYMMDD())
+    const arrivalsTomorrow = fetch(airportIATA, "arrivals", dateTomorrowYYYYMMDD())
+    const departuresToday = fetch(airportIATA, "departures", dateTodayYYYYMMDD())
+    const departuresTomorrow = fetch(airportIATA, "departures", dateTomorrowYYYYMMDD())
+    const arrivalsAndDepartures = await Promise.all([
+      arrivalsToday,
+      arrivalsTomorrow,
+      departuresToday,
+      departuresTomorrow
+    ])
     const flights = {
-        arrivals: arrivalsAndDepartures[0],
-        departures: arrivalsAndDepartures[1]
+        arrivals: [arrivalsAndDepartures[0], arrivalsAndDepartures[1]],
+        departures: [arrivalsAndDepartures[2], arrivalsAndDepartures[3]]
     }
     flightDataCache[airportIATA] = {
         flights,
@@ -47,9 +53,9 @@ const fetchFlightData = async (airportIATA) => {
     return flights
 }
 
-const fetch = (airportIATA, mode) => {
+const fetch = (airportIATA, mode, dateYYYYMMDD) => {
     return new Promise((resolve, reject) => {
-        const options = getOptions(airportIATA, mode)
+        const options = getOptions(airportIATA, mode, dateYYYYMMDD)
 
         https.get(options, (response) => {
             response.setEncoding("utf8")
@@ -72,9 +78,17 @@ const headers = {
     "Ocp-Apim-Subscription-Key": API_KEY
 }
 
-const getOptions = (airportIATA, mode) => ({
+const dateTodayYYYYMMDD = () => (new Date()).toISOString().substring(0, 10)
+const dateTomorrowYYYYMMDD = () => {
+  const tomorrow = new Date()
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  return tomorrow.toISOString().substring(0, 10)
+}
+
+
+const getOptions = (airportIATA, mode, dateYYYYMMDD) => ({
     hostname: "api.swedavia.se",
-    path: `/flightinfo/v2/${airportIATA}/${mode}/${(new Date()).toISOString().substring(0, 10)}`,
+    path: `/flightinfo/v2/${airportIATA}/${mode}/${dateYYYYMMDD}`,
     method: "GET",
     headers
 })
