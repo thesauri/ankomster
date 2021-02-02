@@ -1,6 +1,7 @@
 import Flights from "./Flights.js"
 import "./App.css"
 import { Link, useParams } from "react-router-dom"
+import Page from "./Page"
 import useFlightData from "./useFlightData.js"
 
 const App = ({ mode = "arrivals" }) => {
@@ -10,7 +11,7 @@ const App = ({ mode = "arrivals" }) => {
   const [flightData, fetchError] = useFlightData(airportIATA)
 
   return (
-    <div>
+    <Page>
       <header>
         <Link to={`/${airportIATA}/arrivals`}>
           <h1 className={arrivalsClasses}>
@@ -24,7 +25,7 @@ const App = ({ mode = "arrivals" }) => {
         </Link>
       </header>
       <Flights mode={mode} flightData={flightData} fetchError={fetchError} />
-    </div>
+    </Page>
   );
 }
 
