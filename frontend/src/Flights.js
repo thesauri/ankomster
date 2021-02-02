@@ -90,10 +90,7 @@ const FlightRow = ({time, from, flightId, remarks}) => {
 const DateRow = ({ date }) => {
   return (
     <tr>
-      <td>{date}</td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td colSpan={4}>{date}</td>
     </tr>
   )
 }
