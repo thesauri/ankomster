@@ -1,5 +1,6 @@
 import express from "express"
 import morgan from "morgan"
+import path from "path"
 import fetchFlightData from "./fetchFlightData.js"
 
 const PORT = process.env.PORT || 8080
@@ -18,6 +19,10 @@ app.get("/api/:airportIATA", async (request, response) => {
     }
     const flightData = await fetchFlightData(airportIATA)
     response.json(flightData)
+})
+
+app.get("*", (request, response) => {
+  response.sendFile("public/index.html")
 })
 
 app.listen(PORT, () => {
