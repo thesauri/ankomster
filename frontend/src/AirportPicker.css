@@ -11,10 +11,10 @@
     color: var(--yellow);
 }
 
-.airport-picker > a {
+.airport-picker > h2 > a {
     color: var(--yellow);
 }
 
-.airport-picker > a > h2 {
+.airport-picker > h2 > a {
     margin: 0 0 16px 0;
 }
