@@ -22,7 +22,7 @@ app.get("/api/:airportIATA", async (request, response) => {
 })
 
 app.get("*", (request, response) => {
-  response.sendFile("public/index.html")
+  response.sendFile(path.resolve("public", "index.html"))
 })
 
 app.listen(PORT, () => {
