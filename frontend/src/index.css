@@ -48,13 +48,18 @@ tr:nth-of-type(odd) {
   background-color: var(--light-blue);
 }
 
+th:first-child, td:first-child {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
 th {
   color: var(--yellow);
   text-align: left;
-  padding: 4px 16px;
+  padding: 4px;
 }
 
 td {
   color: var(--white);
-  padding: 4px 16px;
+  padding: 4px;
 }
