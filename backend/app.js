@@ -7,6 +7,8 @@ const PORT = process.env.PORT || 8080
 
 const app = express()
 
+app.enable("trust proxy")
+
 app.use(morgan("short"))
 
 app.use(express.static("public"))
