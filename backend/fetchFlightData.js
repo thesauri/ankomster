@@ -10,6 +10,10 @@ let flightDataCache = {}
 const CACHE_REFRESH_INTERVAL = 60 * 1000
 const cacheUpdateSemaphore = new Semaphore(1)
 
+export const preloadAllFlightData = () => {
+    swedaviaAirports.forEach(fetchFlightData)
+}
+
 const fetchFlightData = async (airportIATA) => {
     let cachedFlightData = flightDataCache[airportIATA]
     if (cachedFlightData &&
@@ -28,7 +32,7 @@ const fetchFlightData = async (airportIATA) => {
         return flightDataCache.flights
     }
 
-    console.log("Fetching fresh data from Swedavia")
+    console.log(`Fetching fresh data for ${airportIATA} from Swedavia`)
     const arrivalsToday = fetch(airportIATA, "arrivals", dateTodayYYYYMMDD())
     const arrivalsTomorrow = fetch(airportIATA, "arrivals", dateTomorrowYYYYMMDD())
     const departuresToday = fetch(airportIATA, "departures", dateTodayYYYYMMDD())
@@ -92,5 +96,7 @@ const getOptions = (airportIATA, mode, dateYYYYMMDD) => ({
     method: "GET",
     headers
 })
+
+export const swedaviaAirports = ["ARN", "GOT", "BMA", "MMX", "LLA", "UME", "OSD", "VBY", "RNB", "KRN"]
 
 export default fetchFlightData

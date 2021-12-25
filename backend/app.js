@@ -1,7 +1,7 @@
 import express from "express"
 import morgan from "morgan"
 import path from "path"
-import fetchFlightData from "./fetchFlightData.js"
+import fetchFlightData, { preloadAllFlightData, swedaviaAirports } from "./fetchFlightData.js"
 
 const PORT = process.env.PORT || 8080
 
@@ -13,7 +13,7 @@ app.use(express.static("public"))
 
 app.get("/api/:airportIATA", async (request, response) => {
     const { airportIATA } = request.params
-    if (!["ARN", "GOT", "BMA", "MMX", "LLA", "UME", "OSD", "VBY", "RNB", "KRN"].includes(airportIATA)) {
+    if (!swedaviaAirports.includes(airportIATA)) {
         response.status(404).send(`Invalid airport IATA: ${airportIATA}`)
         return
     }
@@ -22,7 +22,8 @@ app.get("/api/:airportIATA", async (request, response) => {
 })
 
 app.get("*", (request, response) => {
-  response.sendFile(path.resolve("public", "index.html"))
+    preloadAllFlightData()
+    response.sendFile(path.resolve("public", "index.html"))
 })
 
 app.listen(PORT, () => {
