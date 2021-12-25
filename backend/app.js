@@ -2,12 +2,13 @@ import express from "express"
 import morgan from "morgan"
 import path from "path"
 import fetchFlightData, { preloadAllFlightData, swedaviaAirports } from "./fetchFlightData.js"
+import { redirectToHttps } from "./redirectToHttps.js"
 
 const PORT = process.env.PORT || 8080
 
 const app = express()
 
-app.enable("trust proxy")
+app.use(redirectToHttps)
 
 app.use(morgan("short"))
 
