@@ -10,7 +10,7 @@ let flightDataCache = {}
 const CACHE_REFRESH_INTERVAL = 60 * 1000
 const cacheUpdateSemaphore = new Semaphore(1)
 
-export const preloadAllFlightData = () => {
+export const refreshAllFlightData = () => {
     swedaviaAirports.forEach(fetchFlightData)
 }
 

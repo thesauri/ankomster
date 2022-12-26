@@ -1,7 +1,7 @@
 import express from "express"
 import morgan from "morgan"
 import path from "path"
-import fetchFlightData, { preloadAllFlightData, swedaviaAirports } from "./fetchFlightData.js"
+import fetchFlightData, { refreshAllFlightData, swedaviaAirports } from "./fetchFlightData.js"
 import { redirectToHttps } from "./redirectToHttps.js"
 
 const PORT = process.env.PORT || 8080
@@ -27,10 +27,18 @@ app.get("/api/:airportIATA", async (request, response) => {
 })
 
 app.get("*", (request, response) => {
-    preloadAllFlightData()
+    refreshAllFlightData()
     response.sendFile(path.resolve("public", "index.html"))
 })
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`)
 })
+
+console.log("Preloading flight data...")
+refreshAllFlightData()
+
+setInterval(() => {
+    console.log(`Refreshing all flight data...`)
+    refreshAllFlightData()
+}, 2 * 60 * 1_000)
