@@ -1,7 +1,7 @@
 import assert from "assert"
-import https from "https"
 import process from "process"
 import { Semaphore } from "await-semaphore"
+import got from "got"
 
 const API_KEY = process.env.API_KEY
 assert(API_KEY, "Missing Swedavia API key as API_KEY environment variable")
@@ -33,15 +33,15 @@ const fetchFlightData = async (airportIATA) => {
     }
 
     console.log(`Fetching fresh data for ${airportIATA} from Swedavia`)
-    const arrivalsToday = fetch(airportIATA, "arrivals", dateTodayYYYYMMDD())
-    const arrivalsTomorrow = fetch(airportIATA, "arrivals", dateTomorrowYYYYMMDD())
-    const departuresToday = fetch(airportIATA, "departures", dateTodayYYYYMMDD())
-    const departuresTomorrow = fetch(airportIATA, "departures", dateTomorrowYYYYMMDD())
+    const arrivalsToday = fetchFlights(airportIATA, "arrivals", dateTodayYYYYMMDD())
+    const arrivalsTomorrow = fetchFlights(airportIATA, "arrivals", dateTomorrowYYYYMMDD())
+    const departuresToday = fetchFlights(airportIATA, "departures", dateTodayYYYYMMDD())
+    const departuresTomorrow = fetchFlights(airportIATA, "departures", dateTomorrowYYYYMMDD())
     const arrivalsAndDepartures = await Promise.all([
-      arrivalsToday,
-      arrivalsTomorrow,
-      departuresToday,
-      departuresTomorrow
+        arrivalsToday,
+        arrivalsTomorrow,
+        departuresToday,
+        departuresTomorrow
     ])
     const flights = {
         arrivals: [arrivalsAndDepartures[0], arrivalsAndDepartures[1]],
@@ -57,46 +57,25 @@ const fetchFlightData = async (airportIATA) => {
     return flights
 }
 
-const fetch = (airportIATA, mode, dateYYYYMMDD) => {
-    return new Promise((resolve, reject) => {
-        const options = getOptions(airportIATA, mode, dateYYYYMMDD)
-
-        https.get(options, (response) => {
-            response.setEncoding("utf8")
-            let data = ""
-            response.on("data", (newData) => {
-                data += newData
-            })
-            response.on("end", () => {
-                resolve(JSON.parse(data))
-            })
-        }).on("error", (error) => {
-            reject(error)
-        })
-    })
-}
-
-const headers = {
-    "Accept": "application/json",
-    "Cache-Control": "nocache",
-    "Ocp-Apim-Subscription-Key": API_KEY
+const fetchFlights = async (airportIATA, mode, dateYYYYMMDD) => {
+    const response = await swedaviaGot.get(`https://api.swedavia.se/flightinfo/v2/${airportIATA}/${mode}/${dateYYYYMMDD}`)
+    return JSON.parse(response.body)
 }
 
 const dateTodayYYYYMMDD = () => (new Date()).toISOString().substring(0, 10)
 const dateTomorrowYYYYMMDD = () => {
-  const tomorrow = new Date()
-  tomorrow.setDate(tomorrow.getDate() + 1)
-  return tomorrow.toISOString().substring(0, 10)
+    const tomorrow = new Date()
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    return tomorrow.toISOString().substring(0, 10)
 }
 
-
-const getOptions = (airportIATA, mode, dateYYYYMMDD) => ({
-    hostname: "api.swedavia.se",
-    path: `/flightinfo/v2/${airportIATA}/${mode}/${dateYYYYMMDD}`,
-    method: "GET",
-    headers
+const swedaviaGot = got.extend({
+    headers: {
+        "Accept": "application/json",
+        "Cache-Control": "nocache",
+        "Ocp-Apim-Subscription-Key": API_KEY
+    }
 })
 
-export const swedaviaAirports = ["ARN", "GOT", "BMA", "MMX", "LLA", "UME", "OSD", "VBY", "RNB", "KRN"]
-
 export default fetchFlightData
+export const swedaviaAirports = ["ARN", "GOT", "BMA", "MMX", "LLA", "UME", "OSD", "VBY", "RNB", "KRN"]
