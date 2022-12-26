@@ -8,7 +8,9 @@ const PORT = process.env.PORT || 8080
 
 const app = express()
 
-app.use(redirectToHttps)
+if (process.env.NODE_ENV === "production") {
+    app.use(redirectToHttps)
+}
 
 app.use(morgan("short"))
 
