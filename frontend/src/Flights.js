@@ -1,10 +1,14 @@
-const Flights = ({ mode, flightData, fetchError }) => {
-  if (!flightData) {
-    const message = fetchError || "Hämtar flyg..."
+import { useFlightData } from "./useFlightData"
+
+const Flights = ({ mode, airportIata }) => {
+  const { isLoading, isError, data: flightData, error } = useFlightData()
+
+  if (isLoading || isError) {
+    const message = error || "Hämtar flyg..."
     return (<DummyFlights message={message} />)
   }
 
-  const flights = flightData[mode]
+  const flights = flightData[airportIata][mode]
     .map(flightsOnDate => ({
       date: flightsOnDate[mode === "arrivals" ? "to" : "from"][mode === "arrivals" ? "flightArrivalDate" : "flightDepartureDate"],
       flights: flightsOnDate.flights
@@ -18,6 +22,7 @@ const Flights = ({ mode, flightData, fetchError }) => {
       const from = destinationOf(flight)
       const flightId = flight.flightId
       const remarks = flight.remarksSwedish.length > 0 ? flight.remarksSwedish[flight.remarksSwedish.length - 1].text : ""
+
       return (
         <FlightRow
           key={`${mode}-${time.toISOString()}-${flightId}`}
@@ -41,7 +46,7 @@ const Flights = ({ mode, flightData, fetchError }) => {
     <table>
       <FlightHeader mode={mode} />
       <tbody>
-          {flightRows}
+        {flightRows}
       </tbody>
     </table>
   );
@@ -54,28 +59,28 @@ const DummyFlights = ({ mode, message }) => (
   <table>
     <FlightHeader mode={mode} />
     <tbody>
-        <tr>
-          <td>{message}</td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
+      <tr>
+        <td>{message}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
 )
 
-const FlightHeader = ({ mode }) => ( 
+const FlightHeader = ({ mode }) => (
   <thead>
-      <tr>
-        <th>Tid</th>
-        <th>{mode === "arrivals" ? "Från" : "Till"}</th>
-        <th>Flygnr</th>
-        <th>Anmärkning</th>
-      </tr>
+    <tr>
+      <th>Tid</th>
+      <th>{mode === "arrivals" ? "Från" : "Till"}</th>
+      <th>Flygnr</th>
+      <th>Anmärkning</th>
+    </tr>
   </thead>
 )
 
-const FlightRow = ({time, from, flightId, remarks}) => {
+const FlightRow = ({ time, from, flightId, remarks }) => {
   const formattedTime = `${time.getHours().toString().padStart(2, "0")}:${time.getMinutes().toString().padStart(2, "0")}`
   return (
     <tr>

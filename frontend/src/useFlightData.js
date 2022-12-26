@@ -1,24 +1,14 @@
-import { useState, useEffect } from "react"
+import { useQuery } from "react-query"
 
-const useFlightData = (airportIATA) => {
-    const [flightData, setFlightData] = useState(null)
-    const [fetchError, setFetchError] = useState(null)
+export const useFlightData = () => useQuery(FLIGHT_DATA_KEY, fetchFlightData)
 
-    useEffect(() => {
-        const fetchFlightData = async () => {
-            try {
-              const flightDataString = (await fetch(`/api/${airportIATA}`))
-              const flightData = await flightDataString.json()
-              setFlightData(flightData)
-            } catch (error) {
-              console.error("Unable to fetch flight data: ", error)
-              setFetchError("Flygtiderna kunde tyvärr inte hämtas, prova igen senare.")
-            }
-        }
-        fetchFlightData()
-    }, [airportIATA])
-
-    return [flightData, fetchError];
+export const prefetchFlightData = async (queryClient) => {
+  queryClient.prefetchQuery(FLIGHT_DATA_KEY, fetchFlightData)
 }
 
-export default useFlightData
+const fetchFlightData = async () => {
+  const flightDataString = (await fetch(`/api/flights/all`))
+  return flightDataString.json()
+}
+
+const FLIGHT_DATA_KEY = "flightData"

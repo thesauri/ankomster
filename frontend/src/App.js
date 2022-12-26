@@ -2,13 +2,11 @@ import Flights from "./Flights.js"
 import "./App.css"
 import { Link, useParams } from "react-router-dom"
 import Page from "./Page"
-import useFlightData from "./useFlightData.js"
 
-const App = ({ airport, mode = "arrivals" }) => {
+const App = ({ mode = "arrivals" }) => {
   const arrivalsClasses = ["nav-item", mode !== "arrivals" && "inactive"].filter(x => x).join(" ")
   const departuresClasses = ["nav-item", mode !== "departures" && "inactive"].filter(x => x).join(" ")
   const { airportIATA } = useParams()
-  const [flightData, fetchError] = useFlightData(airportIATA)
 
   return (
     <Page>
@@ -32,7 +30,7 @@ const App = ({ airport, mode = "arrivals" }) => {
           </Link>
         </nav>
       </header>
-      <Flights mode={mode} flightData={flightData} fetchError={fetchError} />
+      <Flights mode={mode} airportIata={airportIATA} />
     </Page>
   );
 }
