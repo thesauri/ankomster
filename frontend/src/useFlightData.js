@@ -7,7 +7,7 @@ export const prefetchFlightData = async (queryClient) => {
 }
 
 const fetchFlightData = async () => {
-  const flightDataString = (await fetch(`/api/flights/all`))
+  const flightDataString = (await fetch(`/api/v1/flights/all`))
   return flightDataString.json()
 }
 

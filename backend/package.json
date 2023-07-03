@@ -10,7 +10,7 @@
     "morgan": "^1.10.0"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "node src/app.js"
   },
   "type": "module"
 }

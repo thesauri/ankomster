@@ -1,8 +1,9 @@
 import express from "express"
 import morgan from "morgan"
 import path from "path"
-import { flightData, refreshAllFlightData } from "./flightData.js"
-import { redirectToHttps } from "./redirectToHttps.js"
+import { refreshAllFlightData } from "./services/flightData.js"
+import { redirectToHttps } from "./middleware/redirectToHttps.js"
+import { apiRouter } from "./controllers/api.js"
 
 const PORT = process.env.PORT || 8080
 
@@ -16,14 +17,7 @@ app.use(morgan("short"))
 
 app.use(express.static("public"))
 
-app.get("/api/flights/all", (request, response) => {
-    const currentFlightDataCache = flightData
-    if (currentFlightDataCache === null) {
-        response.status(503).send("Flight data not yet loaded")
-        return
-    }
-    response.json(currentFlightDataCache)
-})
+app.use("/api/v1", apiRouter)
 
 app.get("*", (request, response) => {
     refreshAllFlightData()
