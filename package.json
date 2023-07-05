@@ -7,8 +7,13 @@
       "node": "18.16.1",
       "npm": "9.5.1"
     },
+    "workspaces": [
+      "frontend",
+      "backend"
+    ],
     "scripts": {
-        "build": "cd frontend/ && yarn && yarn build && cp -r build/ ../backend/ && cd ../backend/ && rm -r public/ && mv build/ public/ && yarn",
-        "start": "cd backend/ && yarn start"
+        "clean": "rm -r backend/public/* && touch backend/public/.keep",
+        "build": "npm run build --workspace=frontend && cp -r frontend/build/* backend/public/",
+        "start": "npm run start --workspaces"
     }
   }
