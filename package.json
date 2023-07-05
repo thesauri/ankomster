@@ -4,16 +4,16 @@
     "version": "1.0.0",
     "license": "MIT",
     "engines": {
-      "node": "18.16.1",
-      "npm": "9.5.1"
+        "node": "18.16.1",
+        "npm": "9.5.1"
     },
     "workspaces": [
-      "frontend",
-      "backend"
+        "frontend",
+        "backend"
     ],
     "scripts": {
         "clean": "rm -r backend/public/* && touch backend/public/.keep",
-        "build": "npm run build --workspace=frontend && cp -r frontend/build/* backend/public/",
+        "build": "npm run build --workspaces && cp -r frontend/build/* backend/public/",
         "start": "npm run start --workspaces"
     }
-  }
+}

@@ -5,12 +5,12 @@ import got from "got"
 const API_KEY = process.env.API_KEY
 assert(API_KEY, "Missing Swedavia API key as API_KEY environment variable")
 
-export let flightData = {}
+export let flightData: Record<string, unknown> = {}
 
 export const refreshAllFlightData = async () => {
     console.log("Refreshing all flight data...")
 
-    const newFlightData = {}
+    const newFlightData: Record<string, unknown> = {}
 
     for (const airportIata of swedaviaAirports) {
         newFlightData[airportIata] = await fetchFlightData(airportIata)
@@ -21,7 +21,7 @@ export const refreshAllFlightData = async () => {
     console.log("Flight data refreshed!")
 }
 
-const fetchFlightData = async (airportIATA) => {
+const fetchFlightData = async (airportIATA: string) => {
     console.log(`Fetching flight data for ${airportIATA} from Swedavia`)
     const arrivalsToday = fetchFlights(airportIATA, "arrivals", dateTodayYYYYMMDD())
     const arrivalsTomorrow = fetchFlights(airportIATA, "arrivals", dateTomorrowYYYYMMDD())
@@ -45,7 +45,7 @@ const fetchFlightData = async (airportIATA) => {
     return flights
 }
 
-const fetchFlights = async (airportIATA, mode, dateYYYYMMDD) => {
+const fetchFlights = async (airportIATA: string, mode: "arrivals" | "departures", dateYYYYMMDD: string): Promise<unknown> => {
     const response = await swedaviaGot.get(`https://api.swedavia.se/flightinfo/v2/${airportIATA}/${mode}/${dateYYYYMMDD}`)
     return JSON.parse(response.body)
 }
