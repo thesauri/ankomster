@@ -13,7 +13,7 @@
     ],
     "scripts": {
         "clean": "rm -r backend/public/* && touch backend/public/.keep",
-        "build": "npm run build --workspaces && cp -r frontend/build/* backend/public/",
+        "build": "npm run build --workspaces && cp -r frontend/dist/* backend/public/",
         "start": "npm run start --workspaces"
     }
 }
