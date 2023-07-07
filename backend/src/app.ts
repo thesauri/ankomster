@@ -4,6 +4,7 @@ import path from "path"
 import { refreshAllFlightData } from "./services/flightData.js"
 import { redirectToHttps } from "./middleware/redirectToHttps.js"
 import { apiRouter } from "./controllers/api.js"
+import { mocksRouter } from "./controllers/mocks.js"
 
 const PORT = process.env.PORT || 8080
 
@@ -18,6 +19,10 @@ app.use(morgan("short"))
 app.use(express.static("public"))
 
 app.use("/api/v1", apiRouter)
+
+if (process.env.NODE_ENV !== "production") {
+    app.use("/mocks", mocksRouter)
+}
 
 app.get("*", (request, response) => {
     refreshAllFlightData()
