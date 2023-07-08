@@ -31,13 +31,13 @@ app.get("*", (request, response) => {
 })
 
 app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}`)
+    logger.info(`Listening on port ${PORT}`)
 })
 
-console.log("Preloading flight data...")
+logger.info("Preloading flight data...")
 refreshAllFlightData()
 
 setInterval(() => {
-    console.log(`Refreshing all flight data...`)
+    logger.info(`Refreshing all flight data...`)
     refreshAllFlightData()
 }, 2 * 60 * 1_000)
