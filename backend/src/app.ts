@@ -1,20 +1,21 @@
 import express from "express"
-import morgan from "morgan"
 import path from "path"
 import { refreshAllFlightData } from "./services/flightData.js"
 import { redirectToHttps } from "./middleware/redirectToHttps.js"
 import { apiRouter } from "./controllers/api.js"
 import { mocksRouter } from "./controllers/mocks.js"
+import pinoHttp from "pino-http"
+import { logger } from "./utils/logger.js"
 
 const PORT = process.env.PORT || 8080
 
 const app = express()
 
+app.use(pinoHttp({ logger }))
+
 if (process.env.NODE_ENV === "production") {
     app.use(redirectToHttps)
 }
-
-app.use(morgan("short"))
 
 app.use(express.static("public"))
 

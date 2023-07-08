@@ -1,5 +1,5 @@
 import got from "got"
-import { env } from "../env.js"
+import { env } from "../utils/env.js"
 
 export let flightData: Record<string, unknown> = {}
 
