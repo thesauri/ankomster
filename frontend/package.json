@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "classnames": "^2.3.2",
+    "ky": "^0.33.3",
     "preact": "^10.13.2",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.14.1",

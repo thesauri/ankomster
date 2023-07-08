@@ -1,3 +1,4 @@
+import ky from "ky"
 import { useQuery, QueryClient } from "react-query"
 import { z } from "zod"
 
@@ -8,7 +9,7 @@ export const prefetchFlightData = async (queryClient: QueryClient) => {
 }
 
 const fetchFlightData = async () => {
-  const potentialFlightData = await (await fetch(`/api/v1/flights/all`)).json()
+  const potentialFlightData = await backendKy.get("/api/v1/flights/all").json()
   return FlightDataSchema.parse(potentialFlightData)
 }
 
@@ -81,3 +82,16 @@ export const SupportedAirportsSchema = z.union([
 export type SupportedAirports = z.infer<typeof SupportedAirportsSchema>
 
 const FlightDataSchema = z.record(SupportedAirportsSchema, AirportSchema);
+
+const backendKy = ky.create({
+  headers: {
+    "ankomster-session-id": crypto.randomUUID()
+  },
+  hooks: {
+    beforeRequest: [
+      request => {
+        request.headers.set("ankomster-request-id", crypto.randomUUID())
+      }
+    ]
+  }
+})
