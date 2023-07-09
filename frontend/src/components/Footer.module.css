@@ -1,0 +1,15 @@
+.footer {
+  justify-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0 1rem;
+}
+
+.footer > p {
+  margin: 0;
+}
+
+.footer > p, .footer > p > a {
+  color: var(--white);
+}

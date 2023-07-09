@@ -1,4 +1,4 @@
-import { Flight, SupportedAirports, useFlightData } from "./useFlightData"
+import { Flight, SupportedAirports, useFlightData } from "../hooks/useFlightData"
 
 export const Flights = ({ mode, airportIata }: { mode: Mode, airportIata: SupportedAirports }) => {
   const { isLoading, isSuccess, data: flightData } = useFlightData()
