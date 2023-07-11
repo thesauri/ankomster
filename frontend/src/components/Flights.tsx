@@ -1,3 +1,4 @@
+import { formatInTimeZone } from "date-fns-tz"
 import { Flight, SupportedAirports, useFlightData } from "../hooks/useFlightData"
 
 export const Flights = ({ mode, airportIata }: { mode: Mode, airportIata: SupportedAirports }) => {
@@ -94,7 +95,8 @@ const FlightRow = ({
     flightId: string,
     remarks: string
 }) => {
-  const formattedTime = `${time.getHours().toString().padStart(2, "0")}:${time.getMinutes().toString().padStart(2, "0")}`
+  const formattedTime = formatInTimeZone(time, "Europe/Stockholm", "HH:mm")
+
   return (
     <tr>
       <td>{formattedTime}</td>
