@@ -14,6 +14,8 @@
     "scripts": {
         "clean": "rm -r backend/public/* && touch backend/public/.keep",
         "build": "npm run build --workspaces && cp -r frontend/dist/* backend/public/",
+        "lint:check": "npm run lint:check --workspaces",
+        "lint:write": "npm run lint:write --workspaces",
         "start": "npm run start --workspaces"
     },
     "devDependencies": {
