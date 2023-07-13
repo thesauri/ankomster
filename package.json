@@ -15,5 +15,11 @@
         "clean": "rm -r backend/public/* && touch backend/public/.keep",
         "build": "npm run build --workspaces && cp -r frontend/dist/* backend/public/",
         "start": "npm run start --workspaces"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^6.0.0",
+        "@typescript-eslint/parser": "^6.0.0",
+        "eslint": "^8.44.0",
+        "eslint-plugin-react": "^7.32.2"
     }
 }
