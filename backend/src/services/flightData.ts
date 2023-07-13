@@ -1,4 +1,4 @@
-import got, { Response } from "got"
+import got from "got"
 import { env } from "../utils/env.js"
 import { logger } from "../utils/logger.js"
 

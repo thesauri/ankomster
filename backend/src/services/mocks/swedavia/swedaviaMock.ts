@@ -148,5 +148,5 @@ export const mockFlightDataFor = ({ airportIata, date, mode }: {
     mode: "arrivals" | "departures"
 }): unknown => {
     if (!(airportIata in flightData)) throw new Error(`No flight data for ${airportIata}`)
-    return flightData[airportIata][mode][date.getDate() % 2];
+    return flightData[airportIata][mode][date.getDate() % 2]
 }

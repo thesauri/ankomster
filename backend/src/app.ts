@@ -38,6 +38,6 @@ logger.info("Preloading flight data...")
 refreshAllFlightData()
 
 setInterval(() => {
-    logger.info(`Refreshing all flight data...`)
+    logger.info("Refreshing all flight data...")
     refreshAllFlightData()
 }, 2 * 60 * 1_000)

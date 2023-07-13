@@ -12,6 +12,8 @@
   },
   "scripts": {
     "build": "tsc",
+    "lint:check": "eslint src/",
+    "lint:write": "eslint --fix src/",
     "start": "node build/app.js",
     "start:dev": "tsc-watch --onSuccess \"node build/app.js\""
   },

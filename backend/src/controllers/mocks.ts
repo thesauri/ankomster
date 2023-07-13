@@ -1,12 +1,12 @@
-import { Router } from "express";
-import { z } from "zod";
-import { mockFlightDataFor } from "../services/mocks/swedavia/swedaviaMock.js";
+import { Router } from "express"
+import { z } from "zod"
+import { mockFlightDataFor } from "../services/mocks/swedavia/swedaviaMock.js"
 
 export const mocksRouter = Router()
 
 mocksRouter.get("/swedavia/flightinfo/v2/:airportIata/:mode/:date", (request, response) => {
     const { airportIata, mode, date } = FlightInfoParameterSchema.parse(request.params)
-    response.json(mockFlightDataFor({ airportIata, mode, date: new Date(date) }));
+    response.json(mockFlightDataFor({ airportIata, mode, date: new Date(date) }))
 })
 
 const FlightInfoParameterSchema = z.object({

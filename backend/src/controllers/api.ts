@@ -1,7 +1,7 @@
-import { Router } from "express";
+import { Router } from "express"
 import { flightData } from "../services/flightData.js"
 
-export const apiRouter = Router();
+export const apiRouter = Router()
 
 apiRouter.get("/flights/all", (request, response) => {
     const currentFlightDataCache = flightData
