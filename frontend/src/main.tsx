@@ -1,11 +1,11 @@
-import { render } from 'preact'
-import { QueryClient, QueryClientProvider } from 'react-query'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { prefetchFlightData } from './useFlightData'
+import { render } from "preact"
+import { QueryClient, QueryClientProvider } from "react-query"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { prefetchFlightData } from "./useFlightData"
 import "./main.css"
-import { AirportPicker } from './pages/AirportPicker.js'
-import { Page } from './components/Page.js'
-import { AirportInformation } from './pages/AirportInformation.js'
+import { AirportPicker } from "./pages/AirportPicker.js"
+import { Page } from "./components/Page.js"
+import { AirportInformation } from "./pages/AirportInformation.js"
 
 const queryClient = new QueryClient()
 
