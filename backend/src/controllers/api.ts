@@ -1,13 +1,13 @@
 import { Router } from "express"
-import { flightData } from "../services/flightData.js"
+import { FlightData } from "../services/flightData"
 
-export const apiRouter = Router()
+export const apiRouter = (flightData: FlightData) => {
+    const router = Router()
 
-apiRouter.get("/flights/all", (request, response) => {
-    const currentFlightDataCache = flightData
-    if (currentFlightDataCache === null) {
-        response.status(503).send("Flight data not yet loaded")
-        return
-    }
-    response.json(currentFlightDataCache)
-})
+    router.get("/flights/all", async (request, response) => {
+        const currentFlightDataCache = await flightData.latest
+        response.json(currentFlightDataCache)
+    })
+
+    return router
+}
