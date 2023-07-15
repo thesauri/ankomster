@@ -1,6 +1,5 @@
-import got from "got"
-import { env } from "../utils/env.js"
 import { logger } from "../utils/logger.js"
+import { fetchFlights } from "../utils/swedavia.js"
 
 export let flightData: Record<string, unknown> = {}
 
@@ -42,26 +41,11 @@ const fetchFlightData = async (airportIATA: string) => {
     return flights
 }
 
-const fetchFlights = async (airportIATA: string, mode: "arrivals" | "departures", dateYYYYMMDD: string): Promise<unknown> => {
-    logger.debug({ airportIATA, mode, dateYYYYMMDD }, `Fetching ${mode} for ${airportIATA} on ${dateYYYYMMDD} from Swedavia`)
-
-    const response = await swedaviaGot.get(`${env.SWEDAVIA_BASE_URL}flightinfo/v2/${airportIATA}/${mode}/${dateYYYYMMDD}`)
-    return JSON.parse(response.body)
-}
-
 const dateTodayYYYYMMDD = () => (new Date()).toISOString().substring(0, 10)
 const dateTomorrowYYYYMMDD = () => {
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + 1)
     return tomorrow.toISOString().substring(0, 10)
 }
-
-const swedaviaGot = got.extend({
-    headers: {
-        "Accept": "application/json",
-        "Cache-Control": "nocache",
-        "Ocp-Apim-Subscription-Key": env.SWEDAVIA_API_KEY
-    }
-})
 
 export const swedaviaAirports = ["ARN", "GOT", "BMA", "MMX", "LLA", "UME", "OSD", "VBY", "RNB", "KRN"]
