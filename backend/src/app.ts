@@ -38,4 +38,4 @@ app.listen(PORT, () => {
 setInterval(async () => {
     logger.info("Refreshing all flight data...")
     await flightData.refreshAllFlightData()
-}, 2 * 60 * 1_000)
+}, 60 * 1_000)
