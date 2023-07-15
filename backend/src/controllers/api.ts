@@ -6,6 +6,7 @@ export const apiRouter = (flightData: FlightData) => {
 
     router.get("/flights/all", async (request, response) => {
         const currentFlightDataCache = await flightData.latest
+        response.header("cache-control", "public, max-age=60")
         response.json(currentFlightDataCache)
     })
 
