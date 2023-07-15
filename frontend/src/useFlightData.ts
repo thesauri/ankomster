@@ -9,7 +9,7 @@ export const prefetchFlightData = async (queryClient: QueryClient) => {
 }
 
 const fetchFlightData = async () => {
-    const potentialFlightData = await backendKy.get("/api/v1/flights/all").json()
+    const potentialFlightData = await backendKy.get("/api/v1/flights").json()
     return FlightDataSchema.parse(potentialFlightData)
 }
 
