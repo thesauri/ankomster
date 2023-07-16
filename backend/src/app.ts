@@ -5,13 +5,13 @@ import { apiRouter } from "./controllers/api.js"
 import { mocksRouter } from "./controllers/mocks.js"
 import pinoHttp from "pino-http"
 import { logger } from "./utils/logger.js"
-import { FlightData } from "./services/flightData.js"
+import { FlightDataCache } from "./services/flightDataCache.js"
 
 const PORT = process.env.PORT || 8080
 
 const app = express()
 
-const flightData = new FlightData()
+const flightDataCache = new FlightDataCache()
 
 app.use(pinoHttp({ logger }))
 
@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === "production") {
 
 app.use(express.static("public"))
 
-app.use("/api/v1", apiRouter(flightData))
+app.use("/api/v1", apiRouter(flightDataCache))
 
 if (process.env.NODE_ENV !== "production") {
     app.use("/mocks", mocksRouter)
@@ -37,5 +37,5 @@ app.listen(PORT, () => {
 
 setInterval(async () => {
     logger.info("Refreshing all flight data...")
-    await flightData.refreshAllFlightData()
+    await flightDataCache.refreshAllFlightData()
 }, 60 * 1_000)
