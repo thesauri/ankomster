@@ -1,3 +1,4 @@
+import compression from "compression"
 import express from "express"
 import path from "path"
 import { redirectToHttps } from "./middleware/redirectToHttps.js"
@@ -14,6 +15,8 @@ const app = express()
 const flightDataCache = new FlightDataCache()
 
 app.use(pinoHttp({ logger }))
+
+app.use(compression())
 
 if (process.env.NODE_ENV === "production") {
     app.use(redirectToHttps)

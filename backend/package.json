@@ -4,6 +4,7 @@
   "author": "Walter Berggren",
   "license": "MIT",
   "dependencies": {
+    "compression": "^1.7.4",
     "express": "^4.17.1",
     "got": "^12.5.3",
     "pino": "^8.14.1",
@@ -19,6 +20,7 @@
   },
   "type": "module",
   "devDependencies": {
+    "@types/compression": "^1.7.2",
     "@types/express": "^4.17.17",
     "@types/node": "^20.3.3",
     "tsc-alias": "^1.8.7",
