@@ -9,5 +9,9 @@ export const apiRouter = (flightDataCache: FlightDataCache) => {
 
     router.use("/flights", initializedFlightsRouter)
 
+    router.get("/health", (_, res) => {
+        res.status(200).send("OK")
+    })
+
     return router
 }

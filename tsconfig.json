@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "lib": ["es2021"],
-        "module": "ES2022",
+        "module": "ESNext",
         "target": "ES2022",
         "strict": true,
         "esModuleInterop": true,
@@ -9,6 +9,12 @@
         "sourceMap": true,
         "forceConsistentCasingInFileNames": true,
         "moduleResolution": "node",
-        "baseUrl": "."
-    }
+        "baseUrl": ".",
+        "outDir": "build",
+        "resolveJsonModule": true
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": []
 }
