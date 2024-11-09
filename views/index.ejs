@@ -2,22 +2,39 @@
 <html lang="sv">
 <head>
     <%- include('./partials/head'); %>
+    <%- include('./partials/reset'); %>
+    <%- include('./partials/styles'); %>
+    <style>
+        h1 {
+            margin: 1rem 0 2rem 0;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
-<h1>Ankomster</h1>
-<ul>
+<div class="container">
+    <h1>Ankomster</h1>
     <ul>
-        <li><a href="/airports/ARN">ARN</a></li>
-        <li><a href="/airports/GOT">GOT</a></li>
-        <li><a href="/airports/BMA">BMA</a></li>
-        <li><a href="/airports/MMX">MMX</a></li>
-        <li><a href="/airports/LLA">LLA</a></li>
-        <li><a href="/airports/UME">UME</a></li>
-        <li><a href="/airports/OSD">OSD</a></li>
-        <li><a href="/airports/VBY">VBY</a></li>
-        <li><a href="/airports/RNB">RNB</a></li>
-        <li><a href="/airports/KRN">KRN</a></li>
+        <ul>
+            <li><a href="/airports/ARN">Stockholm Arlanda</a></li>
+            <li><a href="/airports/GOT">Göteborg Landvetter</a></li>
+            <li><a href="/airports/BMA">Stockholm Bromma</a></li>
+            <li><a href="/airports/MMX">Malmö Sturup</a></li>
+            <li><a href="/airports/LLA">Luleå</a></li>
+            <li><a href="/airports/UME">Umeå</a></li>
+            <li><a href="/airports/OSD">Östersund</a></li>
+            <li><a href="/airports/VBY">Visby</a></li>
+            <li><a href="/airports/RNB">Ronneby</a></li>
+            <li><a href="/airports/KRN">Kiruna</a></li>
+        </ul>
     </ul>
-</ul>
+</div>
 </body>
 </html>
