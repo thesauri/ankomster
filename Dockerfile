@@ -8,6 +8,7 @@ COPY tsconfig.json ./
 RUN npm ci
 
 COPY src/ ./src/
+COPY views/ ./views/
 
 RUN npm run build
 
