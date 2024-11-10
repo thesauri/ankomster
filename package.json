@@ -14,8 +14,6 @@
   },
   "scripts": {
     "build": "backend/node_modules/.bin/tsc",
-    "lint:check": "eslint src/",
-    "lint:write": "eslint --fix src/",
     "start": "node backend/build/app.js",
     "start:dev": "tsc-watch --onSuccess \"node build/app.js\""
   },
