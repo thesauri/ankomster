@@ -1,7 +1,6 @@
 import compression from "compression"
 import express from "express"
 import { redirectToHttps } from "./middleware/redirectToHttps.js"
-import { apiRouter } from "./controllers/api.js"
 import { mocksRouter } from "./controllers/mocks.js"
 import pinoHttp from "pino-http"
 import { logger } from "./utils/logger.js"
@@ -58,8 +57,6 @@ app.get('/airports/:iataCode', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
-app.use("/api/v1", apiRouter(flightDataCache))
 
 if (process.env.NODE_ENV !== "production") {
     app.use("/mocks", mocksRouter)
