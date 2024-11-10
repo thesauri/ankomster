@@ -5,9 +5,23 @@
     <%- include('./partials/reset'); %>
     <%- include('./partials/styles'); %>
     <style>
-        h1 {
-            margin: 0.5rem 0 0.75rem 0;
-            font-size: 1.5rem;
+        nav {
+            margin-bottom: 1.5rem;
+        }
+
+        nav ol {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        nav ol li {
+            color: var(--off-white);
+        }
+
+        nav ol li a {
+            font-size: 1rem;
         }
 
         table {
@@ -15,7 +29,7 @@
             border-collapse: collapse;
             font-size: 0.75rem;
             overflow: hidden;
-            margin-left: -0.25rem;
+            margin: 0 -0.25rem;
         }
 
         th {
@@ -51,11 +65,6 @@
         }
 
         @media (min-width: 500px) {
-            h1 {
-                margin: 1rem 0 1rem 0;
-                font-size: 2rem;
-            }
-
             table {
                 font-size: 1rem;
             }
@@ -64,7 +73,14 @@
 </head>
 <body>
 <div class="container">
-    <h1>Avgångar från <%= airportCode %></h1>
+    <h1>Ankomster</h1>
+    <nav>
+        <ol>
+            <li><a href="/">Flygplatser</a></li>
+            <li>></li>
+            <li>Avgångar från <%= airportCode %></li>
+        </ol>
+    </nav>
     <table>
         <tr>
             <th>Tid</th>
