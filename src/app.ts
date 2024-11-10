@@ -40,6 +40,11 @@ app.get('/airports/:iataCode', async (req, res) => {
             return
         }
 
+        const departuresByTimestamp =
+            airportData.departures
+        departuresByTimestamp.sort((a, b) =>
+            a.timestamp.localeCompare(b.timestamp))
+
         res.render('airport', {
             airportCode: airportCode,
             departures: airportData.departures
