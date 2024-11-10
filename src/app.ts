@@ -7,6 +7,7 @@ import pinoHttp from "pino-http"
 import { logger } from "./utils/logger.js"
 import { FlightDataCache } from "./services/flightDataCache.js"
 import {SwedaviaAirports} from "./services/flightDataCache.interface"
+import {airports} from "./utils/airports.js"
 
 const PORT = process.env.PORT || 8080
 
@@ -25,7 +26,9 @@ if (process.env.NODE_ENV === "production") {
 }
 
 app.get("/", (_, res) => {
-    res.render("index")
+    res.render("index", {
+        airports: Object.entries(airports)
+    })
 })
 
 app.get('/airports/:iataCode', async (req, res) => {
@@ -47,6 +50,7 @@ app.get('/airports/:iataCode', async (req, res) => {
 
         res.render('airport', {
             airportCode: airportCode,
+            airportName: airports[airportCode],
             departures: airportData.departures
         });
     } catch (error) {

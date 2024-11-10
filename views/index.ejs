@@ -19,16 +19,9 @@
     <h1>Ankomster</h1>
     <ul>
         <ul>
-            <li><a href="/airports/ARN">Stockholm Arlanda</a></li>
-            <li><a href="/airports/GOT">Göteborg Landvetter</a></li>
-            <li><a href="/airports/BMA">Stockholm Bromma</a></li>
-            <li><a href="/airports/MMX">Malmö Sturup</a></li>
-            <li><a href="/airports/LLA">Luleå</a></li>
-            <li><a href="/airports/UME">Umeå</a></li>
-            <li><a href="/airports/OSD">Östersund</a></li>
-            <li><a href="/airports/VBY">Visby</a></li>
-            <li><a href="/airports/RNB">Ronneby</a></li>
-            <li><a href="/airports/KRN">Kiruna</a></li>
+            <% airports.forEach(([airportCode, airportName]) => { %>
+                <li><a href="/airports/<%= airportCode %>"><%= airportName %></a></li>
+            <% }); %>
         </ul>
     </ul>
 </div>
