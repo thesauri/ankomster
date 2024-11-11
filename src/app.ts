@@ -53,6 +53,10 @@ app.get('/airports/:iataCode', async (req, res) => {
     }
 });
 
+app.get("/up", (_, res) => {
+    res.send("I'm up!")
+})
+
 if (process.env.NODE_ENV !== "production") {
     app.use("/mocks", mocksRouter)
 }
