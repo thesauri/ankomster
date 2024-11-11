@@ -38,11 +38,11 @@ builder:
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 #
-# env:
-#   clear:
-#     DB_HOST: 192.168.0.2
-#   secret:
-#     - RAILS_MASTER_KEY
+env:
+ clear:
+   SWEDAVIA_BASE_URL: "https://api.swedavia.se/"
+ secret:
+   - SWEDAVIA_API_KEY
 
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal logs -r job" will tail logs from the first server in the job section.
