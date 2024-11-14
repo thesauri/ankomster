@@ -87,10 +87,12 @@ const mapSwedaviaResponeToFlights = (
             airport: flight.departureAirportSwedish,
             flightNumber: flight.flightId,
             remarks: flight.remarksSwedish[0]?.text,
+            flightLegStatus: flight.locationAndStatus.flightLegStatus
         }))
         : swedaviaResponse.flights.map((flight) => ({
             timestamp: flight.departureTime.scheduledUtc,
             airport: flight.arrivalAirportSwedish,
             flightNumber: flight.flightId,
             remarks: flight.remarksSwedish[0]?.text,
+            flightLegStatus: flight.locationAndStatus.flightLegStatus
         }))

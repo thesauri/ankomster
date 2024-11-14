@@ -37,15 +37,15 @@ app.get('/airports/:iataCode', async (req, res) => {
             return
         }
 
-        const departuresByTimestamp =
-            airportData.departures
-        departuresByTimestamp.sort((a, b) =>
+        const departuresWithoutDeletedFlights =
+            airportData.departures.filter((departure) => departure.flightLegStatus !== "DEL")
+        departuresWithoutDeletedFlights.sort((a, b) =>
             a.timestamp.localeCompare(b.timestamp))
 
         res.render('airport', {
             airportCode: airportCode,
             airportName: airports[airportCode],
-            departures: airportData.departures
+            departures: departuresWithoutDeletedFlights
         });
     } catch (error) {
         console.error('Error fetching flight data:', error);

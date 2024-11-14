@@ -19,6 +19,7 @@ const FlightSchema = z.object({
     airport: z.string(),
     flightNumber: z.string(),
     remarks: z.string().optional(),
+    flightLegStatus: z.string()
 })
 export type Flight = z.infer<typeof FlightSchema>
 
