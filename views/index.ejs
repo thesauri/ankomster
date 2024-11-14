@@ -19,11 +19,9 @@
 <div class="container">
     <h1><%= title %></h1>
     <ul>
-        <ul>
-            <% airports.forEach((airport) => { %>
-                <li><a href="<%= airport.href %>"><%= airport.label %></a></li>
-            <% }); %>
-        </ul>
+        <% airports.forEach((airport) => { %>
+            <li><a href="<%= airport.href %>"><%= airport.label %></a></li>
+        <% }); %>
     </ul>
     <%- include('partials/footer'); %>
 </div>
