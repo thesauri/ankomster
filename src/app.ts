@@ -6,6 +6,7 @@ import { logger } from "./utils/logger.js"
 import { FlightDataCache } from "./services/flightDataCache.js"
 import {SwedaviaAirports} from "./services/flightDataCache.interface"
 import {airports} from "./utils/airports.js"
+import {z} from "zod"
 
 const PORT = process.env.PORT || 8080
 
@@ -37,15 +38,30 @@ app.get('/airports/:iataCode', async (req, res) => {
             return
         }
 
-        const departuresWithoutDeletedFlights =
-            airportData.departures.filter((departure) => departure.flightLegStatus !== "DEL")
-        departuresWithoutDeletedFlights.sort((a, b) =>
+        const { direction } = z.object({
+                direction: z.enum(["departures", "arrivals"]).default("arrivals")
+        }).parse(req.query)
+
+        const flights = (direction === "arrivals" ? airportData.arrivals : airportData.departures)
+            .filter((departure) => departure.flightLegStatus !== "DEL")
+        flights.sort((a, b) =>
             a.timestamp.localeCompare(b.timestamp))
+
+        const title = direction === "arrivals" ? "Ankomster" : "Avgångar"
+        const switchDirection = direction === "arrivals" ? ({
+            label: "Se avgångar",
+            href: "?direction=departures"
+            }) : ({
+            label: "Se ankomster",
+            href: "?direction=arrivals"
+        })
 
         res.render('airport', {
             airportCode: airportCode,
             airportName: airports[airportCode],
-            departures: departuresWithoutDeletedFlights
+            flights,
+            title,
+            switchDirection
         });
     } catch (error) {
         console.error('Error fetching flight data:', error);
