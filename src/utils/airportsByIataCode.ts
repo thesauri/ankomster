@@ -1,4 +1,4 @@
-export const airports = {
+export const airportsByIataCode = {
     ARN: "Stockholm Arlanda",
     GOT: "Göteborg Landvetter",
     BMA: "Stockholm Bromma",

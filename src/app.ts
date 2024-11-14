@@ -5,7 +5,7 @@ import pinoHttp from "pino-http"
 import { logger } from "./utils/logger.js"
 import { FlightDataCache } from "./services/flightDataCache.js"
 import {SwedaviaAirports} from "./services/flightDataCache.interface"
-import {airports} from "./utils/airports.js"
+import {airportsByIataCode} from "./utils/airportsByIataCode.js"
 import {z} from "zod"
 
 const PORT = process.env.PORT || 8080
@@ -20,9 +20,18 @@ app.use(pinoHttp({ logger }))
 
 app.use(compression())
 
-app.get("/", (_, res) => {
+app.get("/", (req, res) => {
+    const { direction } = UrlSearchQuerySchema.parse(req.query)
+    const title = getTitleForDirection(direction)
+    const airports = Object.entries(airportsByIataCode).map(([airportCode, airportName]) => ({
+        href: `/airports/${airportCode}?direction=${direction}`,
+        label: airportName
+    }))
+
     res.render("index", {
-        airports: Object.entries(airports)
+        airports,
+        direction,
+        title
     })
 })
 
@@ -38,16 +47,16 @@ app.get('/airports/:iataCode', async (req, res) => {
             return
         }
 
-        const { direction } = z.object({
-                direction: z.enum(["departures", "arrivals"]).default("arrivals")
-        }).parse(req.query)
+        const { direction } = UrlSearchQuerySchema.parse(req.query)
 
         const flights = (direction === "arrivals" ? airportData.arrivals : airportData.departures)
             .filter((departure) => departure.flightLegStatus !== "DEL")
         flights.sort((a, b) =>
             a.timestamp.localeCompare(b.timestamp))
 
-        const title = direction === "arrivals" ? "Ankomster" : "Avgångar"
+        const homeHref = direction === "arrivals" ? "/?direction=arrivals" : "/?direction=departures"
+
+        const title = getTitleForDirection(direction)
         const switchDirection = direction === "arrivals" ? ({
             label: "Se avgångar",
             href: "?direction=departures"
@@ -58,7 +67,8 @@ app.get('/airports/:iataCode', async (req, res) => {
 
         res.render('airport', {
             airportCode: airportCode,
-            airportName: airports[airportCode],
+            airportName: airportsByIataCode[airportCode],
+            homeHref,
             flights,
             title,
             switchDirection
@@ -85,3 +95,16 @@ setInterval(async () => {
     logger.info("Refreshing all flight data...")
     await flightDataCache.refreshAllFlightData()
 }, 60 * 1_000)
+
+const UrlSearchQuerySchema = z.object({
+    direction: z.enum(["arrivals", "departures"]).default("arrivals")
+})
+
+const getTitleForDirection = (direction: "arrivals" | "departures") => {
+    switch (direction) {
+        case "arrivals":
+            return "Ankomster"
+        case "departures":
+            return "Avgångar"
+    }
+}
