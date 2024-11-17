@@ -1,5 +1,5 @@
 import { logger } from "../utils/logger.js"
-import { SwedaviaResponse } from "../utils/swedavia.interface.js"
+import {ArrivingFlight, DepartingFlight, SwedaviaResponse} from "../utils/swedavia.interface.js"
 import { fetchFlights } from "../utils/swedavia.js"
 import {
     AirportFlights,
@@ -61,12 +61,12 @@ const getTwoDayFlightData = async (
 
     return {
         arrivals: [
-            ...mapSwedaviaResponeToFlights(arrivalsToday),
-            ...mapSwedaviaResponeToFlights(arrivalsTomorrow),
+            ...mapSwedaviaResponseToFlights(arrivalsToday),
+            ...mapSwedaviaResponseToFlights(arrivalsTomorrow),
         ],
         departures: [
-            ...mapSwedaviaResponeToFlights(departuresToday),
-            ...mapSwedaviaResponeToFlights(departuresTomorrow),
+            ...mapSwedaviaResponseToFlights(departuresToday),
+            ...mapSwedaviaResponseToFlights(departuresTomorrow),
         ],
     }
 }
@@ -78,21 +78,68 @@ const dateTomorrowYYYYMMDD = () => {
     return tomorrow.toISOString().substring(0, 10)
 }
 
-const mapSwedaviaResponeToFlights = (
+const mapSwedaviaResponseToFlights = (
     swedaviaResponse: SwedaviaResponse
-): Flight[] =>
-    "to" in swedaviaResponse
-        ? swedaviaResponse.flights.map((flight) => ({
+): Flight[] => {
+    if ("to" in swedaviaResponse) {
+        return mapSwedaviaArrivalsToFlights(swedaviaResponse.flights)
+    }
+    return mapSwedaviaDeparturesToFlights(swedaviaResponse.flights)
+}
+
+const mapSwedaviaArrivalsToFlights = (
+    arrivingFlights: ArrivingFlight[]
+): Flight[] => {
+    const flights: Flight[] = []
+
+    for (const flight of arrivingFlights) {
+        if (flight.arrivalTime === undefined ||
+            flight.arrivalTime.scheduledUtc === undefined ||
+            flight.departureAirportSwedish === undefined ||
+            flight.flightId === undefined ||
+            flight.remarksSwedish === undefined ||
+            flight.locationAndStatus === undefined ||
+            flight.locationAndStatus.flightLegStatus === undefined
+        ) {
+            continue
+        }
+        flights.push({
             timestamp: flight.arrivalTime.scheduledUtc,
             airport: flight.departureAirportSwedish,
             flightNumber: flight.flightId,
             remarks: flight.remarksSwedish[0]?.text,
             flightLegStatus: flight.locationAndStatus.flightLegStatus
-        }))
-        : swedaviaResponse.flights.map((flight) => ({
+        })
+    }
+
+    return flights
+}
+
+
+const mapSwedaviaDeparturesToFlights = (
+    departingFlights: DepartingFlight[]
+): Flight[] => {
+    const flights: Flight[] = []
+
+    for (const flight of departingFlights) {
+        if (flight.departureTime === undefined ||
+            flight.departureTime.scheduledUtc === undefined ||
+            flight.arrivalAirportSwedish === undefined ||
+            flight.flightId === undefined ||
+            flight.remarksSwedish === undefined ||
+            flight.locationAndStatus === undefined ||
+            flight.locationAndStatus.flightLegStatus === undefined
+        ) {
+            continue
+        }
+        flights.push({
             timestamp: flight.departureTime.scheduledUtc,
             airport: flight.arrivalAirportSwedish,
             flightNumber: flight.flightId,
             remarks: flight.remarksSwedish[0]?.text,
             flightLegStatus: flight.locationAndStatus.flightLegStatus
-        }))
+        })
+    }
+
+    return flights
+}

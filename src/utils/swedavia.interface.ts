@@ -10,7 +10,7 @@ const BaseFlightSchema = z.object({
             text: z.string()
         })
     ),
-})
+}).partial()
 
 const ArrivingFlightSchema = BaseFlightSchema.extend({
     departureAirportSwedish: z.string(),
@@ -18,7 +18,9 @@ const ArrivingFlightSchema = BaseFlightSchema.extend({
     arrivalTime: z.object({
         scheduledUtc: z.string()
     }),
-})
+}).partial()
+
+export type ArrivingFlight = z.infer<typeof ArrivingFlightSchema>
 
 const DepartingFlightSchema = BaseFlightSchema.extend({
     arrivalAirportEnglish: z.string(),
@@ -26,7 +28,9 @@ const DepartingFlightSchema = BaseFlightSchema.extend({
     departureTime: z.object({
         scheduledUtc: z.string()
     }),
-})
+}).partial()
+
+export type DepartingFlight = z.infer<typeof DepartingFlightSchema>
 
 const ArrivalsSchema = z.object({
     to: z.object({
