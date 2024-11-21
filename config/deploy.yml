@@ -75,20 +75,21 @@ env:
 
 # Use accessory services (secrets come from .kamal/secrets).
 #
-accessories:
- db:
-   image: postgres:17-alpine
-   host: 65.108.91.22
-   port: 5432
-   env:
-     clear:
-         POSTGRES_USER: ankomster
-     secret:
-       - POSTGRES_PASSWORD
-   files:
-     - config/plausible-db.sql:/docker-entrypoint-initdb.d/setup.sql
-   directories:
-     - /mnt/HC_Volume_101303384/ankomster-db:/var/lib/postgresql/data
+# accessories:
+#   db:
+#     image: mysql:8.0
+#     host: 192.168.0.2
+#     port: 3306
+#     env:
+#       clear:
+#         MYSQL_ROOT_HOST: '%'
+#       secret:
+#         - MYSQL_ROOT_PASSWORD
+#     files:
+#       - config/mysql/production.cnf:/etc/mysql/my.cnf
+#       - db/production.sql:/docker-entrypoint-initdb.d/setup.sql
+#     directories:
+#       - data:/var/lib/mysql
 #   redis:
 #     image: valkey/valkey:8
 #     host: 192.168.0.2
