@@ -40,10 +40,10 @@ builder:
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 #
 env:
-  clear:
-    SWEDAVIA_BASE_URL: "https://api.swedavia.se/"
-  secret:
-    - SWEDAVIA_API_KEY
+ clear:
+   SWEDAVIA_BASE_URL: "https://api.swedavia.se/"
+ secret:
+   - SWEDAVIA_API_KEY
 
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal logs -r job" will tail logs from the first server in the job section.
@@ -76,33 +76,19 @@ env:
 # Use accessory services (secrets come from .kamal/secrets).
 #
 accessories:
-  db:
-    image: postgres:17-alpine
-    host: 65.108.91.22
-    port: 5432
-    env:
-      clear:
-        POSTGRES_USER: ankomster
-      secret:
-        - POSTGRES_PASSWORD
-    files:
-      - config/plausible-db.sql:/docker-entrypoint-initdb.d/setup.sql
-    directories:
-      - /mnt/HC_Volume_101303384/ankomster-db:/var/lib/postgresql/data
-  events_db:
-    image: clickhouse/clickhouse-server:24.3.3.102-alpine
-    host: 65.108.91.22
-    port: "127.0.0.1:8123:8123"
-    directories:
-      - /mnt/HC_Volume_101303384/ankomster-events-db/data:/var/lib/clickhouse
-      - /mnt/HC_Volume_101303384/ankomster-events-db/logs:/var/lib/clickhouse-server
-      - /mnt/HC_Volume_101303384/ankomster-events-db/logs.xml:/etc/clickhouse-server/config.d/logs.xml:ro
-      - ./clickhouse/ipv4-only.xml:/etc/clickhouse-server/config.d/ipv4-only.xml:ro
-  plausible:
-    image: ghcr.io/plausible/community-edition:v2.1.4
-    host: 65.108.91.22
-
-
+ db:
+   image: postgres:17-alpine
+   host: 65.108.91.22
+   port: 5432
+   env:
+     clear:
+         POSTGRES_USER: ankomster
+     secret:
+       - POSTGRES_PASSWORD
+   files:
+     - config/plausible-db.sql:/docker-entrypoint-initdb.d/setup.sql
+   directories:
+     - /mnt/HC_Volume_101303384/ankomster-db:/var/lib/postgresql/data
 #   redis:
 #     image: valkey/valkey:8
 #     host: 192.168.0.2
