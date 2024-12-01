@@ -40,8 +40,6 @@ builder:
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 #
 env:
- clear:
-   SWEDAVIA_BASE_URL: "https://api.swedavia.se/"
  secret:
    - SWEDAVIA_API_KEY
 

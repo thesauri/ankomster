@@ -11,7 +11,7 @@ const get = async (airportIata: string, mode: "arrivals" | "departures", dateYYY
 }
 
 const swedaviaGot = got.extend({
-    prefixUrl: env.SWEDAVIA_BASE_URL,
+    prefixUrl: "https://api.swedavia.se/",
     headers: {
         "Accept": "application/json",
         "Cache-Control": "nocache",

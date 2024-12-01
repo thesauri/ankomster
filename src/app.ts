@@ -1,6 +1,5 @@
 import compression from "compression"
 import express from "express"
-import { mocksRouter } from "./controllers/mocks.js"
 import pinoHttp from "pino-http"
 import { logger } from "./utils/logger.js"
 import {z} from "zod"
@@ -89,10 +88,6 @@ app.get('/airports/:iataCode', async (req, res) => {
 app.get("/up", (_, res) => {
     res.send("I'm up!")
 })
-
-if (process.env.NODE_ENV !== "production") {
-    app.use("/mocks", mocksRouter)
-}
 
 app.listen(PORT, () => {
     logger.info(`Listening on port ${PORT}`)
