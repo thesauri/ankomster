@@ -7,6 +7,7 @@ import {SqliteSwedaviaFlightsCache} from "./models/sqlite-swedavia-flights-cache
 import {AirportController} from "./controllers/airport-controller.js"
 
 const PORT = process.env.PORT || 8080
+const refreshIntervalMillis = 60 * 1_000
 const app = express()
 const swedaviaFlightsCache = new SqliteSwedaviaFlightsCache("swedavia-flights-cache.sqlite3")
 const airportController = new AirportController(swedaviaFlightsCache)
@@ -30,11 +31,13 @@ app.listen(PORT, () => {
 })
 
 const updateSwedaviaFlightsCachePeriodically = async () => {
-    await updateSwedaviaFlightsCache(swedaviaFlightsCache)
+    if (swedaviaFlightsCache.isEmptyOrStale(refreshIntervalMillis)) {
+        await updateSwedaviaFlightsCache(swedaviaFlightsCache)
+    }
 
     setInterval(async () => {
         await updateSwedaviaFlightsCache(swedaviaFlightsCache)
-    }, 60 * 1_000)
+    }, refreshIntervalMillis)
 }
 
 void updateSwedaviaFlightsCachePeriodically()

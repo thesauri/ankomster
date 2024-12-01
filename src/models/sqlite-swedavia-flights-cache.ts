@@ -12,8 +12,9 @@ export class SqliteSwedaviaFlightsCache {
                 airportIata   TEXT,
                 departureDate TEXT,
                 direction     TEXT,
-                flights    TEXT,
+                flights       TEXT,
                 rawFlightData TEXT,
+                createdAt     INTEGER NOT NULL DEFAULT (unixepoch('subsec')),
                 PRIMARY KEY (airportIata, departureDate, direction)
             )
         `);
@@ -37,6 +38,20 @@ export class SqliteSwedaviaFlightsCache {
                     .transform((val) => JSON.parse(val))
                     .pipe(z.array(FlightSchema))
         }).parse(row)
+    }
+
+    isEmptyOrStale(staleTimeMillis: number): boolean {
+        const row = this.db.prepare(`
+            SELECT COUNT(*) as count
+            FROM flightData
+            WHERE createdAt < ?
+        `).get(Date.now() - staleTimeMillis);
+
+        const { count } = z.object({
+            count: z.number()
+        }).parse(row)
+
+        return count === 0
     }
 
     upsert(airportIata: string, departureDate: string, direction: string, flights: Flight[], rawFlightData: unknown): void {
