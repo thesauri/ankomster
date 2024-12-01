@@ -13,7 +13,7 @@ export class AirportController {
     }
 
     all(req: Request, res: Response): void {
-        const { direction } = UrlSearchQuerySchema.parse(req.query)
+        const { direction } = z.object({ direction: DirectionSchema }).parse(req.query)
         const title = getTitleForDirection(direction)
         const airports = SwedaviaAirports.getAllAirports().map(({ iataCode, name }) => ({
             href: `/airports/${iataCode}?direction=${direction}`,
@@ -45,13 +45,20 @@ export class AirportController {
             tomorrow.setDate(tomorrow.getDate() + 1)
             const tomorrowsDateInSweden = tomorrow.toLocaleString("sv-SE", { timeZone: "Europe/Stockholm" }).substring(0, 10)
 
-            const { direction } = UrlSearchQuerySchema.parse(req.query)
+            const { direction, filter } = z.object({
+                direction: DirectionSchema,
+                filter: z.enum(["all"]).optional()
+            }).parse(req.query)
 
             const { flights: flightsToday } = this.swedaviaFlightsCache.get(iataCode, currentDateInSweden, direction)
             const { flights: flightsTomorrow } = this.swedaviaFlightsCache.get(iataCode, tomorrowsDateInSweden, direction)
 
+            const oneHourAgo = new Date().getTime() - 60 * 60 * 1_000
+            const cutOffTime = filter === "all" ? 0 : new Date().getTime() - 60 * 60 * 1_000
             const flights = [...flightsToday, ...flightsTomorrow]
-                .filter((departure) => departure.flightLegStatus !== "DEL")
+                .filter((departure) => departure.flightLegStatus !== "DEL" &&
+                    new Date(departure.timestamp).getTime() > cutOffTime
+                 )
             flights.sort((a, b) =>
                 a.timestamp.localeCompare(b.timestamp))
 
@@ -65,6 +72,9 @@ export class AirportController {
                 label: "Se ankomster",
                 href: "?direction=arrivals"
             })
+            const oldFlights = filter !== "all" ? ({
+                href: `?direction=${direction}&filter=all`,
+            }) : undefined
 
             res.render('airport', {
                 airportCode: params,
@@ -72,7 +82,8 @@ export class AirportController {
                 homeHref,
                 flights,
                 title,
-                switchDirection
+                switchDirection,
+                oldFlights
             });
         } catch (error) {
             console.error('Error fetching flight data:', error);
@@ -81,9 +92,7 @@ export class AirportController {
     }
 }
 
-const UrlSearchQuerySchema = z.object({
-    direction: z.enum(["arrivals", "departures"]).default("arrivals")
-})
+const DirectionSchema = z.enum(["arrivals", "departures"]).default("arrivals")
 
 const getTitleForDirection = (direction: "arrivals" | "departures") => {
     switch (direction) {
