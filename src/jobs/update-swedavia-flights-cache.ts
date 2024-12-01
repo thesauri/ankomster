@@ -1,74 +1,42 @@
-import { logger } from "../utils/logger.js"
-import {ArrivingFlight, DepartingFlight, SwedaviaResponse} from "../utils/swedavia.interface.js"
-import { fetchFlights } from "../utils/swedavia.js"
-import {
-    AirportFlights,
-    Flight,
-    FlightData,
-} from "./flightDataCache.interface.js"
+import {Flight, SqliteSwedaviaFlightsCache} from "../models/sqlite-swedavia-flights-cache.js"
+import {logger} from "../utils/logger.js"
+import {SwedaviaFlightsClient} from "../services/swedavia-flights-client.js"
+import {ArrivingFlight, DepartingFlight, SwedaviaResponse} from "../services/swedavia-flights-client.interface.js"
 
-export class FlightDataCache {
-    private _latest: Promise<FlightData> = getLatestFlightData()
+export const updateSwedaviaFlightsCache = async (
+    swedaviaFlightsCache: SqliteSwedaviaFlightsCache
+) => {
+    const airports = ["ARN", "GOT", "BMA", "MMX", "LLA", "UME", "OSD", "VBY", "RNB", "KRN"]
+    const directions = ["arrivals", "departures"] as const
+    const dates = [dateTodayYYYYMMDD(), dateTomorrowYYYYMMDD()]
 
-    constructor() {}
+    logger.info({
+        airports,
+        directions,
+        dates,
+    }, "Updating cache for all airports")
 
-    get latest(): Promise<FlightData> {
-        return this._latest
+    for (const airport of airports) {
+        for (const direction of directions) {
+            for (const date of dates) {
+                try {
+                    logger.info({ airport, direction, date }, `Updating cache for ${airport} ${direction} on ${date}`)
+                    const rawFlightData = await SwedaviaFlightsClient.get(airport, direction, date)
+                    const flights = mapSwedaviaResponseToFlights(rawFlightData)
+                    swedaviaFlightsCache.upsert(airport, date, direction, flights, rawFlightData)
+                    logger.info({ airport, direction, date, n: rawFlightData.flights.length }, `Cache updated for ${airport} ${direction} on ${date} (${rawFlightData.flights.length} flights)`)
+                } catch (err) {
+                    logger.error({ airport, direction, date, err }, `Failed to update cache for ${airport} ${direction} on ${date}`)
+                }
+            }
+        }
     }
 
-    set latest(input: Promise<FlightData>) {
-        this._latest = input
-    }
-
-    async refreshAllFlightData() {
-        const latestFlightData = await getLatestFlightData()
-        this.latest = Promise.resolve(latestFlightData)
-    }
-}
-
-const getLatestFlightData = async (): Promise<FlightData> => ({
-    ARN: await getTwoDayFlightData("ARN"),
-    GOT: await getTwoDayFlightData("GOT"),
-    BMA: await getTwoDayFlightData("BMA"),
-    MMX: await getTwoDayFlightData("MMX"),
-    LLA: await getTwoDayFlightData("LLA"),
-    UME: await getTwoDayFlightData("UME"),
-    OSD: await getTwoDayFlightData("OSD"),
-    VBY: await getTwoDayFlightData("VBY"),
-    RNB: await getTwoDayFlightData("RNB"),
-    KRN: await getTwoDayFlightData("KRN"),
-})
-
-const getTwoDayFlightData = async (
-    airportIATA: string
-): Promise<AirportFlights> => {
-    logger.info(
-        { airportIATA },
-        `Fetching flight data for ${airportIATA} from Swedavia`
-    )
-
-    const [
-        arrivalsToday,
-        arrivalsTomorrow,
-        departuresToday,
-        departuresTomorrow,
-    ] = await Promise.all([
-        fetchFlights(airportIATA, "arrivals", dateTodayYYYYMMDD()),
-        fetchFlights(airportIATA, "arrivals", dateTomorrowYYYYMMDD()),
-        fetchFlights(airportIATA, "departures", dateTodayYYYYMMDD()),
-        fetchFlights(airportIATA, "departures", dateTomorrowYYYYMMDD()),
-    ])
-
-    return {
-        arrivals: [
-            ...mapSwedaviaResponseToFlights(arrivalsToday),
-            ...mapSwedaviaResponseToFlights(arrivalsTomorrow),
-        ],
-        departures: [
-            ...mapSwedaviaResponseToFlights(departuresToday),
-            ...mapSwedaviaResponseToFlights(departuresTomorrow),
-        ],
-    }
+    logger.info({
+        airports,
+        directions,
+        dates,
+    }, "Cache updated for all airports")
 }
 
 const dateTodayYYYYMMDD = () => new Date().toISOString().substring(0, 10)
