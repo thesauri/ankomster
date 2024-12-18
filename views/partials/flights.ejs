@@ -1,0 +1,26 @@
+<table>
+    <thead>
+    <tr>
+        <th>Tid</th>
+        <th>Destination</th>
+        <th>Flygnummer</th>
+        <th>Anmärkningar</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% flights.forEach(flight => { %>
+        <% if (flight.type === 'divider') { %>
+            <tr>
+                <td colspan="4"><%= flight.text %></td>
+            </tr>
+        <% } else { %>
+            <tr>
+                <td><%= new Date(flight.timestamp).toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit', timeZone: "Europe/Stockholm" }) %></td>
+                <td><%= flight.airport %></td>
+                <td><%= flight.flightNumber %></td>
+                <td><%= flight.remarks || '' %></td>
+            </tr>
+        <% } %>
+    <% }); %>
+    </tbody>
+</table>

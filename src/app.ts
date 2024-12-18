@@ -24,6 +24,8 @@ app.get("/", airportController.all);
 
 app.get("/airports/:iataCode", airportController.get);
 
+app.get("/airports/:iataCode/flights", airportController.flights);
+
 app.get("/up", (_, res) => {
   res.send("I'm up!");
 });
