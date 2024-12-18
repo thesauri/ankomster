@@ -195,7 +195,7 @@ type Direction = z.infer<typeof DirectionSchema>;
 const FilterSchema = z.enum(["all", "none"]).default("none");
 type Filter = z.infer<typeof FilterSchema>;
 
-const getTitleForDirection = (direction: "arrivals" | "departures") => {
+const getTitleForDirection = (direction: Direction) => {
   switch (direction) {
     case "arrivals":
       return "Ankomster";
