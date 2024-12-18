@@ -2,6 +2,8 @@ import {SwedaviaAirports, SwedaviaAirportsSchema} from "../services/swedavia-air
 import {z} from "zod"
 import {Request, Response} from "express"
 import {SqliteSwedaviaFlightsCache} from "../models/sqlite-swedavia-flights-cache.js"
+import {formatInTimeZone} from "date-fns-tz"
+import { sv } from 'date-fns/locale'
 
 export class AirportController {
     private swedaviaFlightsCache: SqliteSwedaviaFlightsCache;
@@ -52,15 +54,22 @@ export class AirportController {
 
             const { flights: flightsToday } = this.swedaviaFlightsCache.get(iataCode, currentDateInSweden, direction)
             const { flights: flightsTomorrow } = this.swedaviaFlightsCache.get(iataCode, tomorrowsDateInSweden, direction)
+            flightsToday.sort((a, b) => a.timestamp.localeCompare(b.timestamp))
+            flightsTomorrow.sort((a, b) => a.timestamp.localeCompare(b.timestamp))
 
-            const oneHourAgo = new Date().getTime() - 60 * 60 * 1_000
             const cutOffTime = filter === "all" ? 0 : new Date().getTime() - 60 * 60 * 1_000
-            const flights = [...flightsToday, ...flightsTomorrow]
-                .filter((departure) => departure.flightLegStatus !== "DEL" &&
+            const tomorrowsDateAsDagenDenXMonth = formatInTimeZone(tomorrowsDateInSweden, "Europe/Stockholm", "EEEE'en den' d MMMM", { locale: sv })
+            const capitalizedTomorrowsDate = tomorrowsDateAsDagenDenXMonth.charAt(0).toUpperCase() + tomorrowsDateAsDagenDenXMonth.slice(1)
+            const flights = [
+                ...flightsToday, {
+                    type: "divider",
+                    text: capitalizedTomorrowsDate
+                },
+                ...flightsTomorrow
+            ]
+                .filter((departure) => "type" in departure || departure.flightLegStatus !== "DEL" &&
                     new Date(departure.timestamp).getTime() > cutOffTime
                  )
-            flights.sort((a, b) =>
-                a.timestamp.localeCompare(b.timestamp))
 
             const homeHref = direction === "arrivals" ? "/?direction=arrivals" : "/?direction=departures"
 
