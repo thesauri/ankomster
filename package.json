@@ -18,6 +18,8 @@
   "scripts": {
     "build": "tsc",
     "build:image": "docker build -t thesauri/ankomster .",
+    "format:check": "prettier --check .",
+    "format:write": "prettier --write .",
     "push:image": "docker push thesauri/ankomster",
     "start": "node build/app.js",
     "start:dev": "tsc-watch --onSuccess \"node build/app.js\""
@@ -28,6 +30,7 @@
     "@types/compression": "^1.7.2",
     "@types/express": "^4.17.17",
     "@types/node": "^20.3.3",
+    "prettier": "3.4.2",
     "tsc-alias": "^1.8.7",
     "tsc-watch": "^6.0.4",
     "typescript": "^5.1.6"

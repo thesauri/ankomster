@@ -1,20 +1,18 @@
 {
-    "compilerOptions": {
-        "lib": ["es2021"],
-        "module": "ESNext",
-        "target": "ES2022",
-        "strict": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "sourceMap": true,
-        "forceConsistentCasingInFileNames": true,
-        "moduleResolution": "node",
-        "baseUrl": ".",
-        "outDir": "build",
-        "resolveJsonModule": true
-    },
-    "include": [
-        "src/**/*"
-    ],
-    "exclude": []
+  "compilerOptions": {
+    "lib": ["es2021"],
+    "module": "ESNext",
+    "target": "ES2022",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "outDir": "build",
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*"],
+  "exclude": []
 }
