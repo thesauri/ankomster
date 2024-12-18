@@ -1,6 +1,6 @@
 # Ankomster.nu
 
-![ui](.readme-images/ui.png)
+![ui](.readme-images/ui.webp)
 
 Arrival and departure times for Swedavia's airports in Sweden.
 
