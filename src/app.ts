@@ -5,6 +5,7 @@ import { logger } from "./utils/logger.js";
 import { updateSwedaviaFlightsCache } from "./jobs/update-swedavia-flights-cache.js";
 import { SqliteSwedaviaFlightsCache } from "./models/sqlite-swedavia-flights-cache.js";
 import { AirportController } from "./controllers/airport-controller.js";
+import { ErrorController } from "./controllers/error-controller.js";
 
 const PORT = process.env.PORT || 8080;
 const refreshIntervalMillis = 60 * 1_000;
@@ -12,7 +13,11 @@ const app = express();
 const swedaviaFlightsCache = new SqliteSwedaviaFlightsCache(
   "swedavia-flights-cache.sqlite3",
 );
-const airportController = new AirportController(swedaviaFlightsCache);
+const errorController = new ErrorController();
+const airportController = new AirportController(
+  swedaviaFlightsCache,
+  errorController,
+);
 
 app.set("view engine", "ejs");
 
@@ -29,6 +34,8 @@ app.get("/airports/:iataCode/flights", airportController.flights);
 app.get("/up", (_, res) => {
   res.send("I'm up!");
 });
+
+app.use(errorController.status404NotFound);
 
 app.listen(PORT, () => {
   logger.info(`Listening on port ${PORT}`);

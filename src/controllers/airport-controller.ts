@@ -7,12 +7,19 @@ import { Request, Response } from "express";
 import { SqliteSwedaviaFlightsCache } from "../models/sqlite-swedavia-flights-cache.js";
 import { formatInTimeZone } from "date-fns-tz";
 import { sv } from "date-fns/locale";
+import { ErrorController } from "./error-controller.js";
 
 export class AirportController {
   private swedaviaFlightsCache: SqliteSwedaviaFlightsCache;
+  private errorController: ErrorController;
 
-  constructor(swedaviaFlightsCache: SqliteSwedaviaFlightsCache) {
+  constructor(
+    swedaviaFlightsCache: SqliteSwedaviaFlightsCache,
+    errorController: ErrorController,
+  ) {
     this.swedaviaFlightsCache = swedaviaFlightsCache;
+    this.errorController = errorController;
+
     this.all = this.all.bind(this);
     this.flights = this.flights.bind(this);
     this.get = this.get.bind(this);
@@ -46,7 +53,7 @@ export class AirportController {
         .safeParse(req.params);
 
       if (!params.success) {
-        res.status(404).send("Not Found");
+        this.errorController.status404NotFound(req, res);
         return;
       }
 
@@ -114,7 +121,7 @@ export class AirportController {
         .safeParse(req.params);
 
       if (!params.success) {
-        res.status(404).send("Not Found");
+        this.errorController.status404NotFound(req, res);
         return;
       }
 
