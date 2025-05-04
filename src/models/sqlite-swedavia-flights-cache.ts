@@ -50,26 +50,6 @@ export class SqliteSwedaviaFlightsCache {
       .parse(row);
   }
 
-  isEmptyOrStale(staleTimeMillis: number): boolean {
-    const row = this.db
-      .prepare(
-        `
-            SELECT COUNT(*) as count
-            FROM flightData
-            WHERE createdAt < ?
-        `,
-      )
-      .get(Date.now() - staleTimeMillis);
-
-    const { count } = z
-      .object({
-        count: z.number(),
-      })
-      .parse(row);
-
-    return count === 0;
-  }
-
   upsert(
     airportIata: string,
     departureDate: string,

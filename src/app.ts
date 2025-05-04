@@ -42,9 +42,7 @@ app.listen(PORT, () => {
 });
 
 const updateSwedaviaFlightsCachePeriodically = async () => {
-  if (swedaviaFlightsCache.isEmptyOrStale(refreshIntervalMillis)) {
-    await updateSwedaviaFlightsCache(swedaviaFlightsCache);
-  }
+  await updateSwedaviaFlightsCache(swedaviaFlightsCache);
 
   setInterval(async () => {
     await updateSwedaviaFlightsCache(swedaviaFlightsCache);
