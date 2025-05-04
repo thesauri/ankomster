@@ -9,6 +9,10 @@ import {
   DepartingFlight,
   SwedaviaResponse,
 } from "../services/swedavia-flights-client.interface.js";
+import {
+  getCurrentDateInSwedenYYYMMdd,
+  getTomorrowsDateInSwedenYYYMMdd,
+} from "../utils/dates.js";
 
 export const updateSwedaviaFlightsCache = async (
   swedaviaFlightsCache: SqliteSwedaviaFlightsCache,
@@ -26,7 +30,10 @@ export const updateSwedaviaFlightsCache = async (
     "KRN",
   ];
   const directions = ["arrivals", "departures"] as const;
-  const dates = [dateTodayYYYYMMDD(), dateTomorrowYYYYMMDD()];
+  const dates = [
+    getCurrentDateInSwedenYYYMMdd(),
+    getTomorrowsDateInSwedenYYYMMdd(),
+  ];
 
   logger.info(
     {
@@ -80,13 +87,6 @@ export const updateSwedaviaFlightsCache = async (
     },
     "Cache updated for all airports",
   );
-};
-
-const dateTodayYYYYMMDD = () => new Date().toISOString().substring(0, 10);
-const dateTomorrowYYYYMMDD = () => {
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  return tomorrow.toISOString().substring(0, 10);
 };
 
 const mapSwedaviaResponseToFlights = (

@@ -8,6 +8,10 @@ import { SqliteSwedaviaFlightsCache } from "../models/sqlite-swedavia-flights-ca
 import { formatInTimeZone } from "date-fns-tz";
 import { sv } from "date-fns/locale";
 import { ErrorController } from "./error-controller.js";
+import {
+  getCurrentDateInSwedenYYYMMdd,
+  getTomorrowsDateInSwedenYYYMMdd,
+} from "../utils/dates.js";
 
 export class AirportController {
   private swedaviaFlightsCache: SqliteSwedaviaFlightsCache;
@@ -152,14 +156,8 @@ export class AirportController {
     direction: Direction,
     filter: Filter,
   ) {
-    const currentDateInSweden = new Date()
-      .toLocaleString("sv-SE", { timeZone: "Europe/Stockholm" })
-      .substring(0, 10);
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowsDateInSweden = tomorrow
-      .toLocaleString("sv-SE", { timeZone: "Europe/Stockholm" })
-      .substring(0, 10);
+    const currentDateInSweden = getCurrentDateInSwedenYYYMMdd();
+    const tomorrowsDateInSweden = getTomorrowsDateInSwedenYYYMMdd();
 
     const { flights: flightsToday } = this.swedaviaFlightsCache.get(
       iataCode,
