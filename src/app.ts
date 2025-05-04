@@ -1,5 +1,5 @@
 import compression from "compression";
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import pinoHttp from "pino-http";
 import { logger } from "./utils/logger.js";
 import { updateSwedaviaFlightsCache } from "./jobs/update-swedavia-flights-cache.js";
@@ -35,7 +35,15 @@ app.get("/up", (_, res) => {
   res.send("I'm up!");
 });
 
+app.get("/500", (req, res, next) => {
+  if (process.env.NODE_ENV !== "production") {
+    throw new Error("Test error");
+  }
+  next();
+});
+
 app.use(errorController.status404NotFound);
+app.use(errorController.status500InternalServerError);
 
 app.listen(PORT, () => {
   logger.info(`Listening on port ${PORT}`);
