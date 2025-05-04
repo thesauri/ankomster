@@ -40,6 +40,8 @@ builder:
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 #
 env:
+  clear:
+    NODE_ENV: production
   secret:
     - SWEDAVIA_API_KEY
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
