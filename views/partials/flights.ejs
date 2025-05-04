@@ -1,4 +1,4 @@
-<table>
+<table itemscope itemtype="https://schema.org/ItemList">
     <thead>
     <tr>
         <th>Tid</th>
@@ -14,11 +14,19 @@
                 <td colspan="4"><%= flight.text %></td>
             </tr>
         <% } else { %>
-            <tr>
-                <td><%= new Date(flight.timestamp).toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit', timeZone: "Europe/Stockholm" }) %></td>
-                <td><%= flight.airport %></td>
-                <td><%= flight.flightNumber %></td>
-                <td><%= flight.remarks || '' %></td>
+            <tr itemscope itemtype="https://schema.org/Flight">
+                <td>
+                    <time itemprop="<%= schemaItemProps.time %>" datetime="<%= new Date(flight.timestamp).toISOString() %>">
+                        <%= new Date(flight.timestamp).toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit', timeZone: "Europe/Stockholm" }) %>
+                    </time>
+                </td>
+                <td>
+                   <span itemprop="<%= schemaItemProps.airport %>" itemscope itemtype="https://schema.org/Airport">
+                       <span itemprop="name"><%= flight.airport %></span>
+                   </span>
+                </td>
+                <td itemprop="flightNumber"><%= flight.flightNumber %></td>
+                <td itemprop="disambiguatingDescription"><%= flight.remarks || '' %></td>
             </tr>
         <% } %>
     <% }); %>

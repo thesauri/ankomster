@@ -86,6 +86,8 @@ export class AirportController {
 
       const refreshFlightsUrl = `/airports/${iataCode}/flights?direction=${direction}&filter=${filter}`;
 
+      const schemaItemProps = getSchemaItemProps(direction);
+
       res.render("airport", {
         airportCode: params,
         airportName: SwedaviaAirports.getName(iataCode),
@@ -95,6 +97,7 @@ export class AirportController {
         refreshFlightsUrl,
         switchDirection,
         title,
+        schemaItemProps,
       });
     } catch (error) {
       console.error("Error fetching flight data:", error);
@@ -125,9 +128,11 @@ export class AirportController {
         .parse(req.query);
 
       const flights = this.getFlightsForAirport(iataCode, direction, filter);
+      const schemaItemProps = getSchemaItemProps(direction);
 
       res.render("partials/flights", {
         flights,
+        schemaItemProps,
       });
     } catch (error) {
       console.error("Error fetching flight data:", error);
@@ -202,4 +207,11 @@ const getTitleForDirection = (direction: Direction) => {
     case "departures":
       return "Avgångar";
   }
+};
+
+const getSchemaItemProps = (direction: Direction) => {
+  return {
+    time: direction === "arrivals" ? "arrivalTime" : "departureTime",
+    airport: direction === "arrivals" ? "arrivalAirport" : "departureAirport",
+  };
 };
