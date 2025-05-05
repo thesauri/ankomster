@@ -109,7 +109,10 @@ export class AirportController {
 
       const airportName = SwedaviaAirports.getName(iataCode);
 
-      const metaDescription = `Live ankomst- och avgångstider för ${airportName} flygplats. Uppdateras varje minut. Inga annonser - endast aktuell flyginformation för Swedavias flygplatser.`;
+      const metaDescription =
+        direction === "arrivals"
+          ? `Live ankomsttider för ${airportName} flygplats. Uppdateras varje minut. Inga annonser - endast aktuell flyginformation för Swedavias flygplatser.`
+          : `Live avgångstider för ${airportName} flygplats. Uppdateras varje minut. Inga annonser - endast aktuell flyginformation för Swedavias flygplatser.`;
 
       res.setHeader("Cache-Control", "public, max-age=30");
 
