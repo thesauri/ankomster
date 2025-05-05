@@ -41,6 +41,15 @@ export class AirportController {
       }),
     );
 
+    // Cache the home page with some margin from the typical session length (1 to 2 minutes)
+    // for quick navigation back home.
+    // Re-use cached data even when stale for a day. This should lead to quick page loading
+    // for subsequent visits on the same flight (no flights are this long).
+    res.setHeader(
+      "Cache-Control",
+      "public, max-age=600, stale-while-revalidate=604800",
+    );
+
     res.render("index", {
       airports,
       direction,
@@ -99,6 +108,8 @@ export class AirportController {
 
       const schemaItemProps = getSchemaItemProps(direction);
 
+      res.setHeader("Cache-Control", "public, max-age=30");
+
       res.render("airport", {
         airportCode: params,
         airportName: SwedaviaAirports.getName(iataCode),
@@ -140,6 +151,10 @@ export class AirportController {
 
       const flights = this.getFlightsForAirport(iataCode, direction, filter);
       const schemaItemProps = getSchemaItemProps(direction);
+
+      // This is refreshed every 30 seconds by the frontend, use half the time to avoid
+      // race conditions where refreshes hit the cache
+      res.set("Cache-Control", "public, max-age=15");
 
       res.render("partials/flights", {
         flights,
