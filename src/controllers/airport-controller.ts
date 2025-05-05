@@ -34,9 +34,10 @@ export class AirportController {
       .object({ direction: DirectionSchema })
       .parse(req.query);
     const title = getTitleForDirection(direction);
+    const directionUrl = direction === "arrivals" ? "" : "/departures";
     const airports = SwedaviaAirports.getAllAirports().map(
       ({ iataCode, name }) => ({
-        href: `/airports/${iataCode}?direction=${direction}`,
+        href: `/airports/${iataCode}${directionUrl}`,
         label: name,
       }),
     );
@@ -62,6 +63,7 @@ export class AirportController {
       const params = z
         .object({
           iataCode: SwedaviaAirportsSchema,
+          direction: DirectionSchema,
         })
         .safeParse(req.params);
 
@@ -70,11 +72,10 @@ export class AirportController {
         return;
       }
 
-      const { iataCode: iataCode } = params.data;
+      const { iataCode, direction } = params.data;
 
-      const { direction, filter } = z
+      const { filter } = z
         .object({
-          direction: DirectionSchema,
           filter: FilterSchema,
         })
         .parse(req.query);
@@ -82,25 +83,23 @@ export class AirportController {
       const flights = this.getFlightsForAirport(iataCode, direction, filter);
 
       const homeHref =
-        direction === "arrivals"
-          ? "/?direction=arrivals"
-          : "/?direction=departures";
+        direction === "arrivals" ? "/" : "/?direction=departures";
 
       const title = getTitleForDirection(direction);
       const switchDirection =
         direction === "arrivals"
           ? {
               label: "Se avgångar",
-              href: "?direction=departures",
+              href: `/airports/${iataCode}/departures`,
             }
           : {
               label: "Se ankomster",
-              href: "?direction=arrivals",
+              href: `/airports/${iataCode}`,
             };
       const oldFlights =
         filter !== "all"
           ? {
-              href: `?direction=${direction}&filter=all`,
+              href: `?filter=all`,
             }
           : undefined;
 

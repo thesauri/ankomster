@@ -28,8 +28,8 @@ app.use(compression());
 app.get("/", airportController.all);
 
 app.get("/airports/:iataCode", airportController.get);
-
 app.get("/airports/:iataCode/flights", airportController.flights);
+app.get("/airports/:iataCode/:direction", airportController.get);
 
 app.get("/up", (_, res) => {
   res.send("I'm up!");
