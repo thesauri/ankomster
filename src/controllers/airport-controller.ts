@@ -108,11 +108,15 @@ export class AirportController {
 
       const schemaItemProps = getSchemaItemProps(direction);
 
+      const airportName = SwedaviaAirports.getName(iataCode);
+
+      const metaDescription = `Ankomst- och avgångstider för ${airportName} flygplats. Uppdateras live varje minut. Inga annonser - endast aktuell flyginformation.`;
+
       res.setHeader("Cache-Control", "public, max-age=30");
 
       res.render("airport", {
         airportCode: params,
-        airportName: SwedaviaAirports.getName(iataCode),
+        airportName,
         homeHref,
         flights,
         oldFlights,
@@ -120,6 +124,7 @@ export class AirportController {
         switchDirection,
         title,
         schemaItemProps,
+        metaDescription,
       });
     } catch (error) {
       console.error("Error fetching flight data:", error);
