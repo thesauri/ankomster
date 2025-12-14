@@ -40,6 +40,15 @@ export class SqliteSwedaviaFlightsCache {
       )
       .get(airportIata, departureDate, direction);
 
+    if (row === undefined) {
+      console.warn(
+        `No flights were found for airport ${airportIata} on departure date ${departureDate} in direction ${direction}`,
+      );
+      return {
+        flights: [],
+      };
+    }
+
     return z
       .object({
         flights: z

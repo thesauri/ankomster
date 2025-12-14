@@ -59,79 +59,73 @@ export class AirportController {
   }
 
   async get(req: Request, res: Response) {
-    try {
-      const params = z
-        .object({
-          iataCode: SwedaviaAirportsSchema,
-          direction: DirectionSchema,
-        })
-        .safeParse(req.params);
+    const params = z
+      .object({
+        iataCode: SwedaviaAirportsSchema,
+        direction: DirectionSchema,
+      })
+      .safeParse(req.params);
 
-      if (!params.success) {
-        this.errorController.status404NotFound(req, res);
-        return;
-      }
-
-      const { iataCode, direction } = params.data;
-
-      const { filter } = z
-        .object({
-          filter: FilterSchema,
-        })
-        .parse(req.query);
-
-      const flights = this.getFlightsForAirport(iataCode, direction, filter);
-
-      const homeHref =
-        direction === "arrivals" ? "/" : "/?direction=departures";
-
-      const title = getTitleForDirection(direction);
-      const switchDirection =
-        direction === "arrivals"
-          ? {
-              label: "Se avgångar",
-              href: `/airports/${iataCode}/departures`,
-            }
-          : {
-              label: "Se ankomster",
-              href: `/airports/${iataCode}`,
-            };
-      const oldFlights =
-        filter !== "all"
-          ? {
-              href: `?filter=all`,
-            }
-          : undefined;
-
-      const refreshFlightsUrl = `/airports/${iataCode}/flights?direction=${direction}&filter=${filter}`;
-
-      const schemaItemProps = getSchemaItemProps(direction);
-
-      const airportName = SwedaviaAirports.getName(iataCode);
-
-      const metaDescription =
-        direction === "arrivals"
-          ? `Live ankomsttider för ${airportName} flygplats. Uppdateras varje minut. Inga annonser - endast aktuell flyginformation för Swedavias flygplatser.`
-          : `Live avgångstider för ${airportName} flygplats. Uppdateras varje minut. Inga annonser - endast aktuell flyginformation för Swedavias flygplatser.`;
-
-      res.setHeader("Cache-Control", "public, max-age=30");
-
-      res.render("airport", {
-        airportCode: params,
-        airportName,
-        homeHref,
-        flights,
-        oldFlights,
-        refreshFlightsUrl,
-        switchDirection,
-        title,
-        schemaItemProps,
-        metaDescription,
-      });
-    } catch (error) {
-      console.error("Error fetching flight data:", error);
-      res.status(500).send("Internal Server Error");
+    if (!params.success) {
+      this.errorController.status404NotFound(req, res);
+      return;
     }
+
+    const { iataCode, direction } = params.data;
+
+    const { filter } = z
+      .object({
+        filter: FilterSchema,
+      })
+      .parse(req.query);
+
+    const flights = this.getFlightsForAirport(iataCode, direction, filter);
+
+    const homeHref = direction === "arrivals" ? "/" : "/?direction=departures";
+
+    const title = getTitleForDirection(direction);
+    const switchDirection =
+      direction === "arrivals"
+        ? {
+            label: "Se avgångar",
+            href: `/airports/${iataCode}/departures`,
+          }
+        : {
+            label: "Se ankomster",
+            href: `/airports/${iataCode}`,
+          };
+    const oldFlights =
+      filter !== "all"
+        ? {
+            href: `?filter=all`,
+          }
+        : undefined;
+
+    const refreshFlightsUrl = `/airports/${iataCode}/flights?direction=${direction}&filter=${filter}`;
+
+    const schemaItemProps = getSchemaItemProps(direction);
+
+    const airportName = SwedaviaAirports.getName(iataCode);
+
+    const metaDescription =
+      direction === "arrivals"
+        ? `Live ankomsttider för ${airportName} flygplats. Uppdateras varje minut. Inga annonser - endast aktuell flyginformation för Swedavias flygplatser.`
+        : `Live avgångstider för ${airportName} flygplats. Uppdateras varje minut. Inga annonser - endast aktuell flyginformation för Swedavias flygplatser.`;
+
+    res.setHeader("Cache-Control", "public, max-age=30");
+
+    res.render("airport", {
+      airportCode: params,
+      airportName,
+      homeHref,
+      flights,
+      oldFlights,
+      refreshFlightsUrl,
+      switchDirection,
+      title,
+      schemaItemProps,
+      metaDescription,
+    });
   }
 
   async flights(req: Request, res: Response) {
