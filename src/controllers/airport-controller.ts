@@ -87,18 +87,18 @@ export class AirportController {
     const switchDirection =
       direction === "arrivals"
         ? {
-            label: "Se avgångar",
-            href: `/airports/${iataCode}/departures`,
-          }
+          label: "Se avgångar",
+          href: `/airports/${iataCode}/departures`,
+        }
         : {
-            label: "Se ankomster",
-            href: `/airports/${iataCode}`,
-          };
+          label: "Se ankomster",
+          href: `/airports/${iataCode}`,
+        };
     const oldFlights =
       filter !== "all"
         ? {
-            href: `?filter=all`,
-          }
+          href: `?filter=all`,
+        }
         : undefined;
 
     const refreshFlightsUrl = `/airports/${iataCode}/flights?direction=${direction}&filter=${filter}`;
