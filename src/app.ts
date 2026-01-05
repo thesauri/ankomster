@@ -6,6 +6,7 @@ import { updateSwedaviaFlightsCache } from "./jobs/update-swedavia-flights-cache
 import { SqliteSwedaviaFlightsCache } from "./models/sqlite-swedavia-flights-cache.js";
 import { AirportController } from "./controllers/airport-controller.js";
 import { ErrorController } from "./controllers/error-controller.js";
+import { RedirectionController } from "./controllers/redirection-controller.js";
 
 const PORT = process.env.PORT || 8080;
 const refreshIntervalMillis = 60 * 1_000;
@@ -18,12 +19,15 @@ const airportController = new AirportController(
   swedaviaFlightsCache,
   errorController,
 );
+const redirectionController = new RedirectionController();
 
 app.set("view engine", "ejs");
 
 app.use(pinoHttp({ logger }));
 
 app.use(compression());
+
+app.use(redirectionController.redirectWwwwSubdomain);
 
 app.get("/", airportController.all);
 
