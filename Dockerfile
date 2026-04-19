@@ -1,4 +1,4 @@
-FROM node:22-slim
+FROM node:24-slim
 
 WORKDIR /usr/src/app
 
@@ -12,7 +12,7 @@ COPY views/ ./views/
 
 RUN npm run build
 
-RUN npm prune --production
+RUN npm prune --omit=dev
 
 EXPOSE 8080
 
