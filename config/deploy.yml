@@ -7,7 +7,7 @@ image: thesauri/ankomster
 # Deploy to these servers.
 servers:
   web:
-    - 65.108.91.22
+    - 100.127.28.10
   # job:
   #   hosts:
   #     - 192.168.0.1
