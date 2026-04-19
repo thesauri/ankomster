@@ -51,10 +51,16 @@ export class AirportController {
       "public, max-age=600, stale-while-revalidate=604800",
     );
 
+    const canonicalUrl =
+      direction === "departures"
+        ? "https://ankomster.nu/?direction=departures"
+        : "https://ankomster.nu";
+
     res.render("index", {
       airports,
       direction,
       title,
+      canonicalUrl,
     });
   }
 
