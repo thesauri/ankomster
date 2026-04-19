@@ -28,6 +28,7 @@ app.use(pinoHttp({ logger }));
 app.use(compression());
 
 app.use(redirectionController.redirectWwwwSubdomain);
+app.use(redirectionController.redirectLegacyAirportUrls);
 
 app.get("/", airportController.all);
 
