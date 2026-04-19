@@ -112,6 +112,11 @@ export class AirportController {
         ? `Live ankomsttider för ${airportName} flygplats. Uppdateras varje minut. Inga annonser - endast aktuell flyginformation för Swedavias flygplatser.`
         : `Live avgångstider för ${airportName} flygplats. Uppdateras varje minut. Inga annonser - endast aktuell flyginformation för Swedavias flygplatser.`;
 
+    const canonicalUrl =
+      direction === "departures"
+        ? `https://ankomster.nu/airports/${iataCode}/departures`
+        : `https://ankomster.nu/airports/${iataCode}`;
+
     res.setHeader("Cache-Control", "public, max-age=30");
 
     res.render("airport", {
@@ -125,6 +130,7 @@ export class AirportController {
       title,
       schemaItemProps,
       metaDescription,
+      canonicalUrl,
     });
   }
 
