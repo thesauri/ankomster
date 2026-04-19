@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY tsconfig.json ./
 
-RUN npm ci
+RUN npm ci --omit=optional
 
 COPY src/ ./src/
 COPY views/ ./views/
