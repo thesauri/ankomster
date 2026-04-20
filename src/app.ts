@@ -8,6 +8,7 @@ import { AirportController } from "./controllers/airport-controller.js";
 import { ErrorController } from "./controllers/error-controller.js";
 import { RedirectionController } from "./controllers/redirection-controller.js";
 import { SitemapController } from "./controllers/sitemap-controller.js";
+import { RobotsController } from "./controllers/robots-controller.js";
 
 const PORT = process.env.PORT || 8080;
 const refreshIntervalMillis = 60 * 1_000;
@@ -22,6 +23,7 @@ const airportController = new AirportController(
 );
 const redirectionController = new RedirectionController();
 const sitemapController = new SitemapController();
+const robotsController = new RobotsController();
 
 app.set("view engine", "ejs");
 
@@ -33,6 +35,7 @@ app.use(redirectionController.redirectWwwwSubdomain);
 app.use(redirectionController.redirectLegacyAirportUrls);
 
 app.get("/sitemap.xml", sitemapController.get);
+app.get("/robots.txt", robotsController.get);
 
 app.get("/", airportController.all);
 
