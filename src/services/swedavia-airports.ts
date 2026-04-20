@@ -7,10 +7,12 @@ const getAllAirports = (): { iataCode: string; name: string }[] => {
   }));
 };
 const getName = (iataCode: SwedaviaAirports) => namesByIataCode[iataCode];
+const getShortName = (iataCode: SwedaviaAirports) => shortNamesByIataCode[iataCode];
 
 export const SwedaviaAirports = {
   getAllAirports,
   getName,
+  getShortName,
 };
 
 export const SwedaviaAirportsSchema = z.union([
@@ -32,6 +34,19 @@ const namesByIataCode = {
   GOT: "Göteborg Landvetter",
   BMA: "Stockholm Bromma",
   MMX: "Malmö Sturup",
+  LLA: "Luleå",
+  UME: "Umeå",
+  OSD: "Östersund",
+  VBY: "Visby",
+  RNB: "Ronneby",
+  KRN: "Kiruna",
+};
+
+const shortNamesByIataCode: Record<SwedaviaAirports, string> = {
+  ARN: "Arlanda",
+  GOT: "Landvetter",
+  BMA: "Bromma",
+  MMX: "Malmö",
   LLA: "Luleå",
   UME: "Umeå",
   OSD: "Östersund",

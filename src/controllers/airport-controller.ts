@@ -56,10 +56,16 @@ export class AirportController {
         ? "https://ankomster.nu/?direction=departures"
         : "https://ankomster.nu";
 
+    const pageTitle =
+      direction === "departures"
+        ? "Avgångar live – svenska flygplatser | ankomster.nu"
+        : "Ankomster live – svenska flygplatser | ankomster.nu";
+
     res.render("index", {
       airports,
       direction,
       title,
+      pageTitle,
       canonicalUrl,
     });
   }
@@ -112,6 +118,9 @@ export class AirportController {
     const schemaItemProps = getSchemaItemProps(direction);
 
     const airportName = SwedaviaAirports.getName(iataCode);
+    const airportShortName = SwedaviaAirports.getShortName(iataCode);
+    const directionWord = direction === "arrivals" ? "Ankomster" : "Avgångar";
+    const pageTitle = `${directionWord} ${airportShortName} (${iataCode}) – idag och imorgon | ankomster.nu`;
 
     const metaDescription =
       direction === "arrivals"
@@ -134,6 +143,7 @@ export class AirportController {
       refreshFlightsUrl,
       switchDirection,
       title,
+      pageTitle,
       schemaItemProps,
       metaDescription,
       canonicalUrl,
