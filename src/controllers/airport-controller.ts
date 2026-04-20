@@ -122,10 +122,7 @@ export class AirportController {
     const directionWord = direction === "arrivals" ? "Ankomster" : "Avgångar";
     const pageTitle = `${directionWord} ${airportShortName} (${iataCode}) – idag och imorgon | ankomster.nu`;
 
-    const metaDescription =
-      direction === "arrivals"
-        ? `Live ankomsttider för ${airportName} flygplats. Uppdateras varje minut. Inga annonser - endast aktuell flyginformation för Swedavias flygplatser.`
-        : `Live avgångstider för ${airportName} flygplats. Uppdateras varje minut. Inga annonser - endast aktuell flyginformation för Swedavias flygplatser.`;
+    const metaDescription = getMetaDescription(iataCode, airportName, direction);
 
     const canonicalUrl =
       direction === "departures"
@@ -257,4 +254,18 @@ const getSchemaItemProps = (direction: Direction) => {
     time: direction === "arrivals" ? "arrivalTime" : "departureTime",
     airport: direction === "arrivals" ? "arrivalAirport" : "departureAirport",
   };
+};
+
+const getMetaDescription = (
+  iataCode: SwedaviaAirports,
+  airportName: string,
+  direction: Direction,
+) => {
+  const flightWord = direction === "arrivals" ? "Ankommande" : "Avgående";
+  const preposition = direction === "arrivals" ? "till" : "från";
+  const timesWord = direction === "arrivals" ? "ankomsttider" : "avgångstider";
+  if (iataCode === "ARN") {
+    return `${flightWord} flyg ${preposition} Stockholm Arlanda (ARN) idag och imorgon, alla terminaler inkl. terminal 5. Uppdateras automatiskt – utan annonser.`;
+  }
+  return `${flightWord} flyg ${preposition} ${airportName} (${iataCode}) idag och imorgon. Uppdateras automatiskt – live ${timesWord} utan annonser.`;
 };

@@ -46,7 +46,7 @@ const shortNamesByIataCode: Record<SwedaviaAirports, string> = {
   ARN: "Arlanda",
   GOT: "Landvetter",
   BMA: "Bromma",
-  MMX: "Malmö",
+  MMX: "Malmö Sturup",
   LLA: "Luleå",
   UME: "Umeå",
   OSD: "Östersund",
