@@ -80,7 +80,7 @@ describe("get", () => {
           iataCode: "GOT",
           direction: "arrivals",
         },
-        query: {},
+        query: { filter: "all" },
       } as unknown as Request,
       response,
     );
@@ -88,7 +88,9 @@ describe("get", () => {
     expect(response.render).toHaveBeenCalledWith(
       "airport",
       expect.objectContaining({
-        flights: []
+        flights: expect.arrayContaining([
+          expect.objectContaining({ flightNumber: "SK67" }),
+        ]),
       }),
     );
   })
